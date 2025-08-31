@@ -13,8 +13,13 @@ export default function HomePage() {
       <div className="relative z-10 flex flex-col items-center">
         <FuzzyText fontSize="6rem" fontFamily="monospace">TECHSTORM 2.0</FuzzyText>
         <div className="mt-8">
-          <ElectricBorder>
-            <div className="bg-black text-white p-8">
+          <ElectricBorder
+            color="#7df9ff"
+            speed={1}
+            chaos={0.5}
+            thickness={2}
+            style={{ borderRadius: 16 }}>
+            <div className=" p-8">
               <GoogleSignInButton />
             </div>
           </ElectricBorder>
