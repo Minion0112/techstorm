@@ -41,7 +41,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-black text-white">
+    <main className="min-h-dvh text-white  relative z-10 ">
       <div className="mx-auto max-w-3xl px-6 py-12 space-y-10">
         <h1 className="text-2xl text-balance">
           Welcome{profile?.bio ? `, ${profile.bio}` : ""}{" "}

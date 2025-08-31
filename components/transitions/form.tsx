@@ -35,34 +35,62 @@ export default function Max() {
     function validate(): boolean {
         const next: Errors = {}
 
-        if (!name.trim()) next.name = "Name is required."
-        if (!/^\d{10}$/.test(mobile.trim())) next.mobile = "Enter a 10-digit mobile number."
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = "Enter a valid email address."
-        if (!registration.trim()) next.registration = "Registration number is required."
+        // Name
+        if (!name.trim()) {
+            next.name = "Name is required."
+        }
 
+        // Mobile (must be exactly 10 digits)
+        if (!/^\d{10}$/.test(mobile.trim())) {
+            next.mobile = "Enter a 10-digit mobile number."
+        }
+
+        // Email
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            next.email = "Enter a valid email address."
+        }
+
+        // Registration Number
+        if (!registration.trim()) {
+            next.registration = "Registration number is required."
+        }
+
+        // Hosteler-specific checks
         if (isHosteler) {
-            if (!hostelName.trim()) next.hostelName = "Select your hostel."
-            if (!roomNo.trim()) next.roomNo = "Enter your room number."
-            next.undertakingFile = undefined
+            if (!hostelName.trim()) {
+                next.hostelName = "Select your hostel."
+            }
+            if (!roomNo.trim()) {
+                next.roomNo = "Enter your room number."
+            }
         } else {
-            if (!undertakingFile) next.undertakingFile = "Please upload a signed undertaking."
-            next.hostelName = undefined
-            next.roomNo = undefined
+            // Non-hosteler → undertaking required
+            if (!undertakingFile) {
+                next.undertakingFile = "Please upload a signed undertaking."
+            }
         }
 
         setErrors(next)
         return Object.keys(next).length === 0
     }
 
+
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault()
-        if (!validate()) return 
+        console.log("Form submitted")
+        if (!validate()) {
+            console.log("Validation failed")
+            return
+        }
+        console.log("Validation passed")
 
         try {
             setSubmitting(true)
             // Simulate server call
             await new Promise((r) => setTimeout(r, 600))
-            router.push("/dashboard")
+            console.log("Redirecting now...");
+            router.push("/dashboard");
+
             setSubmitted(true)
         } finally {
             setSubmitting(false)
@@ -82,6 +110,7 @@ export default function Max() {
                         onChange={(e) => setName(e.target.value)}
                         aria-invalid={!!errors.name}
                         aria-describedby={errors.name ? "name-error" : undefined}
+                        className="cursor-target"
                     />
                     {errors.name && (
                         <p id="name-error" className="text-sm text-destructive">
@@ -101,6 +130,7 @@ export default function Max() {
                         onChange={(e) => setMobile(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
                         aria-invalid={!!errors.mobile}
                         aria-describedby={errors.mobile ? "mobile-error" : undefined}
+                        className="cursor-target"
                     />
                     {errors.mobile && (
                         <p id="mobile-error" className="text-sm text-destructive">
@@ -120,6 +150,7 @@ export default function Max() {
                         onChange={(e) => setEmail(e.target.value)}
                         aria-invalid={!!errors.email}
                         aria-describedby={errors.email ? "email-error" : undefined}
+                        className="cursor-target"
                     />
                     {errors.email && (
                         <p id="email-error" className="text-sm text-destructive">
@@ -138,7 +169,8 @@ export default function Max() {
                         onChange={(e) => setRegistration(e.target.value)}
                         aria-invalid={!!errors.registration}
                         aria-describedby={errors.registration ? "registration-error" : undefined}
-                    />
+                        className="cursor-target"
+                        />
                     {errors.registration && (
                         <p id="registration-error" className="text-sm text-destructive">
                             {errors.registration}
@@ -168,6 +200,7 @@ export default function Max() {
                                 setSubmitted(false)
                             }}
                             aria-label="Are you a hosteler?"
+                            className="cursor-target"
                         />
                     </div>
                 </div>
@@ -178,12 +211,12 @@ export default function Max() {
                         <div className="space-y-2">
                             <Label htmlFor="hostelName">Hostel Name</Label>
                             <Select value={hostelName} onValueChange={setHostelName}>
-                                <SelectTrigger id="hostelName" aria-invalid={!!errors.hostelName}>
+                                <SelectTrigger id="hostelName" aria-invalid={!!errors.hostelName} className="cursor-target text-background" >
                                     <SelectValue placeholder="Select hostel" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {hostelOptions.map((h) => (
-                                        <SelectItem key={h} value={h}>
+                                        <SelectItem key={h} value={h} className="cursor-target text-background" >
                                             {h}
                                         </SelectItem>
                                     ))}
@@ -201,6 +234,7 @@ export default function Max() {
                                 onChange={(e) => setRoomNo(e.target.value)}
                                 aria-invalid={!!errors.roomNo}
                                 aria-describedby={errors.roomNo ? "room-error" : undefined}
+                                className="cursor-target"
                             />
                             {errors.roomNo && (
                                 <p id="room-error" className="text-sm text-destructive">
@@ -221,7 +255,7 @@ export default function Max() {
                                     Download the undertaking template, sign it, and upload a scanned copy (PDF or image).
                                 </p>
                             </div>
-                            <Button asChild >
+                            <Button asChild className="cursor-target px-4 py-2">
                                 {/* Replace href with your actual template file path when available */}
                                 <a href="/placeholder.svg?height=842&width=595" download="undertaking-form-template.svg">
                                     Download Template
@@ -235,7 +269,7 @@ export default function Max() {
                                 id="undertaking"
                                 type="file"
                                 accept=".pdf,.png,.jpg,.jpeg"
-                                className="hidden"
+                                className="hidden cursor-target"
                                 onChange={(e) => {
                                     const f = e.target.files?.[0] ?? null
                                     setUndertakingFile(f)
@@ -251,6 +285,7 @@ export default function Max() {
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
                                 aria-controls="undertaking"
+                                className="cursor-target"
                             >
                                 Upload
                             </Button>
@@ -269,7 +304,7 @@ export default function Max() {
             </div>
 
             <div className="flex items-center gap-3">
-                <Button type="submit" disabled={submitting}>
+                <Button type="submit" disabled={submitting} className="cursor-target px-4 py-2">
                     {submitting ? "Submitting..." : "Submit"}
                 </Button>
                 {submitted && <p className="text-sm text-muted-foreground">Profile saved successfully.</p>}

@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
@@ -14,24 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="antialiased">
       <body className={`bg-black text-white font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
-          <PixelBlast
-            variant="square"
-            pixelSize={5}
-            color="#908e8e"
-            patternScale={1.75}
-            patternDensity={1}
-            pixelSizeJitter={0}
-            enableRipples
-            rippleSpeed={0.4}
-            rippleThickness={0.12}
-            rippleIntensityScale={1.5}
-            speed={0.4}
-            edgeFade={0.1}
-            transparent
-            noiseAmount={0}
-          />
-        </div>  
+        
         <Suspense fallback={null}>{children}</Suspense>
         <MatrixLoaderOverlay />
         <RouteWave trigger="from-onboarding" durationMs={900} />

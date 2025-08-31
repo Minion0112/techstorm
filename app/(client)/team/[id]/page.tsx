@@ -1,15 +1,16 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, use } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import JoinBurst from "@/components/matrix/join-burst"
 import { notifyTeamJoined } from "@/lib/matrix-loader"
 
-export default function TeamPage({ params }: { params: { id: string } }) {
+export default function TeamPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const [members, setMembers] = useState(["user1", "user2"]) // Mock members
-  const team = { id: params.id, name: "My Team", code: "ABCDEF", members } // Mock team
+  const unwrappedParams = use(params)
+  const team = { id: unwrappedParams.id, name: "My Team", code: "ABCDEF", members } // Mock team
   const triggerKey = `${team?.id}:${members.length}`
   const prevCountRef = useRef<number>(members.length)
 
@@ -24,7 +25,7 @@ export default function TeamPage({ params }: { params: { id: string } }) {
 
   if (!team) {
     return (
-      <main className="min-h-dvh bg-black text-white">
+      <main className="min-h-dvh text-white">
         <div className="mx-auto max-w-3xl px-6 py-12 space-y-6">
           <h1 className="text-2xl">Team not found</h1>
           <Button
@@ -39,18 +40,18 @@ export default function TeamPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="min-h-dvh bg-black text-white">
+    <main className="min-h-dvh  text-white relative z-10">
       <div className="mx-auto max-w-3xl px-6 py-12 space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl">{team.name}</h1>
-          <span className="text-xs border border-white px-2 py-1">Join code: {team.code}</span>
+          <span className="text-xs border border-white px-2 py-1 bg-black">Join code: {team.code}</span>
         </div>
 
         <div className="space-y-4">
           <h2 className="text-lg">Members</h2>
           <ul className="space-y-2">
             {members.map((uid) => (
-              <li key={uid} className="flex items-center justify-between border border-white px-3 py-2">
+              <li key={uid} className="flex items-center justify-between border border-white px-3 py-2 bg-black cursor-target">
                 <span>
                   {uid === "user1" ? "You" : `Agent ${uid.slice(-4)}`}{" "}
                   {uid === "user1" && <span className="text-white/60">@user</span>}
@@ -81,8 +82,6 @@ export default function TeamPage({ params }: { params: { id: string } }) {
           </Button>
         </div>
       </div>
-
-      <JoinBurst triggerKey={triggerKey} />
     </main>
   )
 }
