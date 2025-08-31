@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { showMatrixLoader } from "@/lib/matrix-loader"
+import Max from "@/components/transitions/form"
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -26,44 +27,10 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-black text-white">
-      <div className="mx-auto max-w-md px-6 py-16">
-        <Card className="bg-black text-white border border-white">
-          <CardHeader>
-            <CardTitle className="text-xl">Complete your profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={onSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="display_name">Display name</Label>
-                <Input
-                  id="display_name"
-                  placeholder="Ada Lovelace"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="bg-black text-white border-white placeholder:text-white/40"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="handle">Handle</Label>
-                <Input
-                  id="handle"
-                  placeholder="ada"
-                  value={handle}
-                  onChange={(e) => setHandle(e.target.value)}
-                  className="bg-black text-white border-white placeholder:text-white/40"
-                />
-                <p className="text-xs text-white/60">Letters, numbers, dashes, underscores</p>
-              </div>
-              <Button
-                className="w-full bg-white text-black hover:bg-black hover:text-white border border-white"
-                type="submit"
-              >
-                Save and continue
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+    <main className="h-dvh text-white relative z-10 flex items-center justify-center">
+      <div className=" px-6 py-16 h-100vh">
+        <Max />
+        
       </div>
     </main>
   )
