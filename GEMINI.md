@@ -2,14 +2,12 @@
 
 ## Project Overview
 
-This is a Next.js application that allows users to create and join teams. It uses Supabase for authentication and database storage, and Tailwind CSS for styling. The application has a "Matrix-style" theme.
+This is a Next.js application for the "Techstorm 2.0" hackathon. It serves as a landing page with a "Matrix-style" theme and a Google Sign-In button.
 
 The main features of the application are:
 
-*   User authentication with Google
-*   User profiles
-*   Team creation and management
-*   Real-time updates using Supabase subscriptions
+*   A landing page with a "Matrix-style" theme
+*   A Google Sign-In button
 
 ## Building and Running
 
@@ -21,16 +19,7 @@ To build and run the project, you need to have Node.js and npm installed.
     npm install
     ```
 
-2.  **Set up environment variables:**
-
-    Create a `.env.local` file in the root of the project and add the following environment variables:
-
-    ```
-    NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
-    ```
-
-3.  **Run the development server:**
+2.  **Run the development server:**
 
     ```bash
     npm run dev
@@ -38,13 +27,13 @@ To build and run the project, you need to have Node.js and npm installed.
 
     The application will be available at `http://localhost:3000`.
 
-4.  **Run the production build:**
+3.  **Run the production build:**
 
     ```bash
     npm run build
     ```
 
-5.  **Start the production server:**
+4.  **Start the production server:**
 
     ```bash
     npm run start
@@ -54,6 +43,3 @@ To build and run the project, you need to have Node.js and npm installed.
 
 *   **Styling:** The project uses Tailwind CSS for styling. The configuration is in `tailwind.config.js`.
 *   **Components:** Reusable components are located in the `components` directory.
-*   **Supabase:** The Supabase client is initialized in `lib/supabase/browser-client.ts` and `lib/supabase/server-client.ts`.
-*   **Authentication:** Authentication is handled by Supabase. The authentication flow is implemented in the `app/auth` directory.
-*   **Middleware:** The `middleware.ts` file refreshes the user's session on every request.
