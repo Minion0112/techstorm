@@ -9,6 +9,7 @@ create table if not exists public.profiles (
   hostel_name text,
   room_no text,
   gender text,
+  undertaking_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz
 );

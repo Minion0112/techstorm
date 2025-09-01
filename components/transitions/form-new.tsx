@@ -44,7 +44,7 @@ export default function NewForm() {
         getUser();
     }, [supabase.auth]);
 
-    const hostelOptions = useMemo(() => ['A Block', 'B Block', 'C Block', 'D Block', 'Girls Hostel', 'Boys Hostel'], [])
+    const hostelOptions = useMemo(() => ['Ratan Tata Hostel', 'Kalpana Chawla Hostel', 'APJ Abdul Kalam Hostel'], [])
 
     function validate(): boolean {
         const next: Errors = {}
@@ -105,6 +105,25 @@ export default function NewForm() {
                 return;
             }
 
+            let undertaking_url = null;
+            if (undertakingFile) {
+                const { data, error } = await supabase.storage
+                    .from('undertakings')
+                    .upload(`${user.id}/${undertakingFile.name}`,
+                    undertakingFile,
+                    {
+                        upsert: true,
+                    });
+
+                if (error) {
+                    console.error('Error uploading file:', error);
+                    return;
+                }
+
+                const { data: { publicUrl } } = supabase.storage.from('undertakings').getPublicUrl(data.path);
+                undertaking_url = publicUrl;
+            }
+
             const { error } = await supabase.from('profiles').upsert({
                 id: user.id,
                 display_name: name,
@@ -115,6 +134,7 @@ export default function NewForm() {
                 is_hosteler: isHosteler,
                 hostel_name: hostelName,
                 room_no: roomNo,
+                undertaking_url: undertaking_url,
             });
 
             if (error) {
@@ -204,7 +224,6 @@ export default function NewForm() {
                         <SelectContent>
                             <SelectItem value="male" className="cursor-target text-background">Male</SelectItem>
                             <SelectItem value="female" className="cursor-target text-background">Female</SelectItem>
-                            <SelectItem value="other" className="cursor-target text-background">Other</SelectItem>
                         </SelectContent>
                     </Select>
                     {errors.gender && <p className="text-sm text-destructive">{errors.gender}</p>}
@@ -329,7 +348,7 @@ export default function NewForm() {
                             </div>
                             <Button asChild className="cursor-target px-4 py-2">
                                 {/* Replace href with your actual template file path when available */}
-                                <a href="/placeholder.svg?height=842&width=595" download="undertaking-form-template.svg">
+                                <a href="https://supa.t-bash.space/storage/v1/object/public/newbro//Undertaking%20for%20Day%20Scholars%20to%20stay%20on%20campus%20-%20Chords%20and%20Choreo%20by%20PFA.docx" download="undertaking-form.docx">
                                     Download Template
                                 </a>
                             </Button>
