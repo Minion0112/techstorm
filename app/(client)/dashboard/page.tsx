@@ -3,18 +3,22 @@
 import type React from 'react'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
+import FuzzyText from '@/components/transitions/glitch'
+import ElectricBorder from '@/components/transitions/electric-grid'
+import ProfileCard from '@/components/transitions/profile'
 
 export default function DashboardPage() {
   const router = useRouter()
   const [teamName, setTeamName] = useState('')
   const [joinCode, setJoinCode] = useState('')
   const [profile, setProfile] = useState<any>(null)
-  const [teams, setTeams] = useState<any[]>([])
+  const [team, setTeam] = useState<any>(null)
+  const [members, setMembers] = useState<any[]>([])
+  const [showCreate, setShowCreate] = useState(true)
   const supabase = createClient()
 
   useEffect(() => {
@@ -25,11 +29,17 @@ export default function DashboardPage() {
         setProfile(profileData);
 
         const { data: teamsData } = await supabase.from('v_user_teams').select('*');
-        setTeams(teamsData || []);
+        if (teamsData && teamsData.length > 0) {
+            const currentTeam = teamsData[0];
+            setTeam(currentTeam);
+            
+            const { data: membersData } = await supabase.rpc('get_team_members', { p_team_id: currentTeam.id });
+            setMembers(membersData || []);
+        }
       }
     };
     getData();
-  }, [supabase]);
+  }, [supabase, team]);
 
   async function onCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -43,7 +53,7 @@ export default function DashboardPage() {
         return;
     }
 
-    router.push(`/team/${newTeam.id}`);
+    setTeam(newTeam);
   }
 
   async function onJoin(e: React.FormEvent<HTMLFormElement>) {
@@ -58,12 +68,22 @@ export default function DashboardPage() {
         return;
     }
 
-    router.push(`/team/${joinedTeam.id}`);
+    setTeam(joinedTeam);
   }
 
+  async function onLeave() {
+      if (!team) return;
+      await supabase.rpc('leave_team', { p_team_id: team.id });
+      setTeam(null);
+      setMembers([]);
+  }
+
+  const blackAndWhiteBehindGradient = 'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(0,0%,100%,var(--card-opacity)) 4%,hsla(0,0%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(0,0%,60%,calc(var(--card-opacity)*0.5)) 50%,hsla(0,0%,0%,0) 100%)';
+  const blackAndWhiteInnerGradient = 'linear-gradient(145deg,#3333338c 0%,#dddddd44 100%)';
+
   return (
-    <main className="min-h-dvh text-white  relative z-10 ">
-      <div className="mx-auto max-w-3xl px-6 py-12 space-y-10">
+    <main className="min-h-dvh text-white relative z-10">
+      <div className="mx-auto max-w-6xl px-6 py-12 space-y-10">
         <div className="flex items-center justify-between">
             <h1 className="text-2xl text-balance">
               Welcome{profile?.display_name ? `, ${profile.display_name}` : ''}{' '}
@@ -80,72 +100,111 @@ export default function DashboardPage() {
             </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-black border border-white">
-            <CardHeader>
-              <CardTitle>Create a team</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={onCreate} className="space-y-4">
-                <Input
-                  value={teamName}
-                  onChange={(e) => setTeamName(e.target.value)}
-                  placeholder="Team name"
-                  className="bg-black text-white border-white placeholder:text-white/40"
-                />
-                <Button
-                  className="w-full bg-white text-black hover:bg-black hover:text-white border border-white"
-                  type="submit"
-                >
-                  Create
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-8">
+                {team ? (
+                    <div className="space-y-8">
+                        <div className="border border-white p-6">
+                            <h3 className="text-xl mb-4">Team: {team.name}</h3>
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm text-white/50">Join Code: {team.join_code}</p>
+                                <Button
+                                    className="bg-black text-white border border-white hover:bg-white hover:text-black"
+                                    onClick={() => navigator.clipboard.writeText(team.join_code)}
+                                >
+                                    Copy
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="border border-white p-6">
+                            <h3 className="text-xl mb-4">Team Members</h3>
+                            <ul className="space-y-3">
+                                {members.map(member => (
+                                    <li key={member.handle} className="flex justify-between items-center">
+                                        <div>
+                                            <p>{member.display_name}</p>
+                                            <p className="text-sm text-white/50">@{member.handle}</p>
+                                        </div>
+                                        <span className="text-xs px-2 py-1 border border-white rounded-full">{member.role}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-          <Card className="bg-black border border-white">
-            <CardHeader>
-              <CardTitle>Join a team</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={onJoin} className="space-y-4">
-                <Input
-                  value={joinCode}
-                  onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                  placeholder="Join code"
-                  className="bg-black text-white border-white placeholder:text-white/40 uppercase"
-                />
-                <Button
-                  className="w-full bg-white text-black hover:bg-black hover:text-white border border-white"
-                  type="submit"
-                >
-                  Join
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+                        <Button onClick={onLeave} className="w-full bg-transparent text-white border border-white hover:bg-white hover:text-black">
+                            Leave Team
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        <div className="flex justify-center">
+                            <div className="inline-flex border border-white p-1">
+                                <Button onClick={() => setShowCreate(true)} className={`px-6 py-2 ${showCreate ? 'bg-white text-black' : 'bg-black text-white'}`}>Create</Button>
+                                <Button onClick={() => setShowCreate(false)} className={`px-6 py-2 ${!showCreate ? 'bg-white text-black' : 'bg-black text-white'}`}>Join</Button>
+                            </div>
+                        </div>
 
-        <div className="space-y-4">
-          <h2 className="text-lg">Your teams</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {teams.length > 0 ? (
-              teams.map((t) => (
-                <Link
-                  key={t.id}
-                  href={`/team/${t.id}`}
-                  className="block border border-white p-4 hover:bg-white hover:text-black transition"
-                >
-                  <div className="flex items-center justify-between">
-                    <span>{t.name}</span>
-                    <span className="text-xs">Code: {t.code}</span>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p className="text-white/60 text-sm">You’re not in any teams yet.</p>
-            )}
-          </div>
+                        <ElectricBorder>
+                            <div className="p-8">
+                                {showCreate ? (
+                                    <form onSubmit={onCreate} className="space-y-4">
+                                        <FuzzyText fontSize="1.5rem" fontFamily="monospace">Create a new team</FuzzyText>
+                                        <Input
+                                        value={teamName}
+                                        onChange={(e) => setTeamName(e.target.value)}
+                                        placeholder="Team name"
+                                        className="bg-black text-white border-white placeholder:text-white/40"
+                                        />
+                                        <Button
+                                        className="w-full bg-white text-black hover:bg-black hover:text-white border border-white"
+                                        type="submit"
+                                        >
+                                        Create
+                                        </Button>
+                                    </form>
+                                ) : (
+                                    <form onSubmit={onJoin} className="space-y-4">
+                                        <FuzzyText fontSize="1.5rem" fontFamily="monospace">Join an existing team</FuzzyText>
+                                        <Input
+                                        value={joinCode}
+                                        onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                                        placeholder="Join code"
+                                        className="bg-black text-white border-white placeholder:text-white/40 uppercase"
+                                        />
+                                        <Button
+                                        className="w-full bg-white text-black hover:bg-black hover:text-white border border-white"
+                                        type="submit"
+                                        >
+                                        Join
+                                        </Button>
+                                    </form>
+                                )}
+                            </div>
+                        </ElectricBorder>
+                    </div>
+                )}
+            </div>
+            <div className="flex items-center justify-center">
+                {profile && (
+                    <ProfileCard
+                        avatarUrl='./trp.png'
+                        miniAvatarUrl='./placeholder-user.jpg'
+                        name={profile.display_name}
+                        title={team ? team.name : "No Team"}
+                        handle={profile.handle}
+                        status={team ? team.role : "Unassigned"}
+                        behindGradient={blackAndWhiteBehindGradient}
+                        innerGradient={blackAndWhiteInnerGradient}
+                        showUserInfo={true}
+                        contactText={team ? `Code: ${team.join_code}` : "No Team"}
+                        onContactClick={() => {
+                            if (team) {
+                                navigator.clipboard.writeText(team.join_code)
+                            }
+                        }}
+                    />
+                )}
+            </div>
         </div>
       </div>
     </main>

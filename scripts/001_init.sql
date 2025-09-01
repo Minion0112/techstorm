@@ -102,6 +102,30 @@ create trigger on_profile_update
   for each row
   execute procedure public.handle_profile_update();
 
+-- Function to get team members
+create or replace function public.get_team_members(p_team_id uuid)
+returns table (display_name text, handle text, role text)
+language sql
+security definer
+as $
+  select p.display_name, p.handle, tm.role
+  from public.team_members tm
+  join public.profiles p on p.id = tm.user_id
+  where tm.team_id = p_team_id;
+$;
+
+-- Function to leave a team
+create or replace function public.leave_team(p_team_id uuid)
+returns void
+language plpgsql
+security definer
+as $
+begin
+  delete from public.team_members
+  where team_id = p_team_id and user_id = auth.uid();
+end;
+$;
+
 -- Realtime (Supabase) is enabled per table by default; ensure replica identity
 alter table public.team_members replica identity full;
 

@@ -16,7 +16,7 @@ export async function GET(request: Request) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('handle')
-        .eq('id', user.id)
+        .eq('id', user?.id)
         .single();
 
       if (profile && profile.handle) {
