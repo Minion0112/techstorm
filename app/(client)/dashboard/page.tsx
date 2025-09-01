@@ -83,8 +83,8 @@ export default function DashboardPage() {
       setMembers([]);
   }
 
-  const blackAndWhiteBehindGradient = 'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(0,0%,100%,var(--card-opacity)) 4%,hsla(0,0%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(0,0%,60%,calc(var(--card-opacity)*0.5)) 50%,hsla(0,0%,0%,0) 100%)';
-  const blackAndWhiteInnerGradient = 'linear-gradient(145deg,#3333338c 0%,#dddddd44 100%)';
+  const blackAndWhiteBehindGradient = 'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(0,80%,70%,var(--card-opacity)) 4%,hsla(0,60%,50%,calc(var(--card-opacity)*0.75)) 10%,hsla(0,40%,30%,calc(var(--card-opacity)*0.5)) 50%,hsla(0,0%,0%,0) 100%)';
+  const blackAndWhiteInnerGradient = '';
 
   return (
     <main className="min-h-dvh text-white relative z-10">
