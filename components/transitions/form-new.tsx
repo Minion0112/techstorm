@@ -1,72 +1,83 @@
-"use client"
+'use client'
 
-import type React from "react"
-import { useMemo, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation"
+import type React from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client'
 
 type Errors = Partial<
-    Record<"name" | "mobile" | "email" | "registration" | "hostelName" | "roomNo" | "undertakingFile", string>
+    Record<'name' | 'mobile' | 'email' | 'registration' | 'hostelName' | 'roomNo' | 'undertakingFile' | 'handle', string>
 >
 
-export default function Max() {
+export default function NewForm() {
     const router = useRouter()
-    const [name, setName] = useState("")
-    const [mobile, setMobile] = useState("")
-    const [email, setEmail] = useState("")
-    const [registration, setRegistration] = useState("")
+    const [name, setName] = useState('')
+    const [handle, setHandle] = useState('')
+    const [mobile, setMobile] = useState('')
+    const [email, setEmail] = useState('')
+    const [registration, setRegistration] = useState('')
     const [isHosteler, setIsHosteler] = useState<boolean>(false)
-    const [hostelName, setHostelName] = useState<string>("")
-    const [roomNo, setRoomNo] = useState<string>("")
+    const [hostelName, setHostelName] = useState<string>('')
+    const [roomNo, setRoomNo] = useState<string>('')
     const [undertakingFile, setUndertakingFile] = useState<File | null>(null)
     const [errors, setErrors] = useState<Errors>({})
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
 
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const supabase = createClient()
 
-    const hostelOptions = useMemo(() => ["A Block", "B Block", "C Block", "D Block", "Girls Hostel", "Boys Hostel"], [])
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setEmail(user.email || '');
+            }
+        };
+        getUser();
+    }, [supabase.auth]);
+
+    const hostelOptions = useMemo(() => ['A Block', 'B Block', 'C Block', 'D Block', 'Girls Hostel', 'Boys Hostel'], [])
 
     function validate(): boolean {
         const next: Errors = {}
 
-        // Name
         if (!name.trim()) {
-            next.name = "Name is required."
+            next.name = 'Name is required.'
         }
 
-        // Mobile (must be exactly 10 digits)
+        if (!handle.trim()) {
+            next.handle = 'Handle is required.'
+        }
+
         if (!/^\d{10}$/.test(mobile.trim())) {
-            next.mobile = "Enter a 10-digit mobile number."
+            next.mobile = 'Enter a 10-digit mobile number.'
         }
 
-        // Email
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            next.email = "Enter a valid email address."
+            next.email = 'Enter a valid email address.'
         }
 
-        // Registration Number
         if (!registration.trim()) {
-            next.registration = "Registration number is required."
+            next.registration = 'Registration number is required.'
         }
 
-        // Hosteler-specific checks
         if (isHosteler) {
             if (!hostelName.trim()) {
-                next.hostelName = "Select your hostel."
+                next.hostelName = 'Select your hostel.'
             }
             if (!roomNo.trim()) {
-                next.roomNo = "Enter your room number."
+                next.roomNo = 'Enter your room number.'
             }
         } else {
-            // Non-hosteler → undertaking required
             if (!undertakingFile) {
-                next.undertakingFile = "Please upload a signed undertaking."
+                next.undertakingFile = 'Please upload a signed undertaking.'
             }
         }
 
@@ -77,21 +88,40 @@ export default function Max() {
 
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault()
-        console.log("Form submitted")
         if (!validate()) {
-            console.log("Validation failed")
             return
         }
-        console.log("Validation passed")
 
         try {
             setSubmitting(true)
-            // Simulate server call
-            await new Promise((r) => setTimeout(r, 600))
-            console.log("Redirecting now...");
-            router.push("/dashboard");
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                // handle case where user is not logged in
+                return;
+            }
+
+            const { error } = await supabase.from('profiles').upsert({
+                id: user.id,
+                display_name: name,
+                handle: handle,
+                mobile: mobile,
+                registration_number: registration,
+                is_hosteler: isHosteler,
+                hostel_name: hostelName,
+                room_no: roomNo,
+            }).select();
+
+            if (error) {
+                // handle error, maybe show a toast
+                console.error(error);
+                if (error.code === '23505') { // unique constraint violation
+                    setErrors({ handle: 'This handle is already taken.' })
+                }
+                return;
+            }
 
             setSubmitted(true)
+            router.push('/dashboard');
         } finally {
             setSubmitting(false)
         }
@@ -109,12 +139,31 @@ export default function Max() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         aria-invalid={!!errors.name}
-                        aria-describedby={errors.name ? "name-error" : undefined}
+                        aria-describedby={errors.name ? 'name-error' : undefined}
                         className="cursor-target"
                     />
                     {errors.name && (
                         <p id="name-error" className="text-sm text-destructive">
                             {errors.name}
+                        </p>
+                    )}
+                </div>
+
+                {/* Handle */}
+                <div className="space-y-2">
+                    <Label htmlFor="handle">Handle</Label>
+                    <Input
+                        id="handle"
+                        placeholder="your-unique-handle"
+                        value={handle}
+                        onChange={(e) => setHandle(e.target.value)}
+                        aria-invalid={!!errors.handle}
+                        aria-describedby={errors.handle ? 'handle-error' : undefined}
+                        className="cursor-target"
+                    />
+                    {errors.handle && (
+                        <p id="handle-error" className="text-sm text-destructive">
+                            {errors.handle}
                         </p>
                     )}
                 </div>
@@ -127,9 +176,9 @@ export default function Max() {
                         inputMode="numeric"
                         placeholder="9876543210"
                         value={mobile}
-                        onChange={(e) => setMobile(e.target.value.replace(/[^\d]/g, "").slice(0, 10))}
+                        onChange={(e) => setMobile(e.target.value.replace(/[^\d]/g, '').slice(0, 10))}
                         aria-invalid={!!errors.mobile}
-                        aria-describedby={errors.mobile ? "mobile-error" : undefined}
+                        aria-describedby={errors.mobile ? 'mobile-error' : undefined}
                         className="cursor-target"
                     />
                     {errors.mobile && (
@@ -149,8 +198,9 @@ export default function Max() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         aria-invalid={!!errors.email}
-                        aria-describedby={errors.email ? "email-error" : undefined}
+                        aria-describedby={errors.email ? 'email-error' : undefined}
                         className="cursor-target"
+                        disabled
                     />
                     {errors.email && (
                         <p id="email-error" className="text-sm text-destructive">
@@ -168,7 +218,7 @@ export default function Max() {
                         value={registration}
                         onChange={(e) => setRegistration(e.target.value)}
                         aria-invalid={!!errors.registration}
-                        aria-describedby={errors.registration ? "registration-error" : undefined}
+                        aria-describedby={errors.registration ? 'registration-error' : undefined}
                         className="cursor-target"
                         />
                     {errors.registration && (
@@ -185,16 +235,16 @@ export default function Max() {
                         <p className="text-xs text-muted-foreground">Toggle on if you reside in a hostel.</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className={cn("text-sm", isHosteler ? "text-background" : "text-muted-foreground")}>
-                            {isHosteler ? "Yes" : "No"}
+                        <span className={cn('text-sm', isHosteler ? 'text-background' : 'text-muted-foreground')}>
+                            {isHosteler ? 'Yes' : 'No'}
                         </span>
                         <Switch
                             id="hosteler"
                             checked={isHosteler}
                             onCheckedChange={(v) => {
                                 setIsHosteler(v)
-                                setHostelName("")
-                                setRoomNo("")
+                                setHostelName('')
+                                setRoomNo('')
                                 setUndertakingFile(null)
                                 setErrors({})
                                 setSubmitted(false)
@@ -233,7 +283,7 @@ export default function Max() {
                                 value={roomNo}
                                 onChange={(e) => setRoomNo(e.target.value)}
                                 aria-invalid={!!errors.roomNo}
-                                aria-describedby={errors.roomNo ? "room-error" : undefined}
+                                aria-describedby={errors.roomNo ? 'room-error' : undefined}
                                 className="cursor-target"
                             />
                             {errors.roomNo && (
@@ -279,7 +329,7 @@ export default function Max() {
                                     }
                                 }}
                                 aria-invalid={!!errors.undertakingFile}
-                                aria-describedby={errors.undertakingFile ? "undertaking-error" : undefined}
+                                aria-describedby={errors.undertakingFile ? 'undertaking-error' : undefined}
                             />
                             <Button
                                 type="button"
@@ -290,7 +340,7 @@ export default function Max() {
                                 Upload
                             </Button>
                             <span className="text-sm text-muted-foreground truncate">
-                                {undertakingFile ? undertakingFile.name : "No file selected"}
+                                {undertakingFile ? undertakingFile.name : 'No file selected'}
                             </span>
                         </div>
 
@@ -305,7 +355,7 @@ export default function Max() {
 
             <div className="flex items-center gap-3">
                 <Button type="submit" disabled={submitting} className="cursor-target px-4 py-2">
-                    {submitting ? "Submitting..." : "Submit"}
+                    {submitting ? 'Submitting...' : 'Submit'}
                 </Button>
                 {submitted && <p className="text-sm text-muted-foreground">Profile saved successfully.</p>}
             </div>

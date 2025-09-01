@@ -3,7 +3,13 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text,
   handle text unique,
-  created_at timestamptz not null default now()
+  mobile text,
+  registration_number text,
+  is_hosteler boolean,
+  hostel_name text,
+  room_no text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz
 );
 
 -- Teams table
@@ -29,7 +35,7 @@ create or replace function public.create_team_with_owner(p_name text)
 returns public.teams
 language plpgsql
 security definer
-as $$
+as $
 declare
   v_team public.teams;
   v_join_code text;
@@ -44,14 +50,14 @@ begin
   values (v_team.id, auth.uid(), 'owner');
 
   return v_team;
-end $$;
+end $;
 
 -- Function to join team by code
 create or replace function public.join_team_by_code(p_join_code text)
 returns public.teams
 language plpgsql
 security definer
-as $$
+as $
 declare
   v_team public.teams;
 begin
@@ -65,7 +71,36 @@ begin
   on conflict (team_id, user_id) do nothing;
 
   return v_team;
-end $$;
+end $;
+
+-- This trigger automatically creates a profile for new users.
+create function public.handle_new_user()
+returns trigger as $
+begin
+  insert into public.profiles (id)
+  values (new.id);
+  return new;
+end;
+$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+-- Function to update updated_at timestamp
+create or replace function public.handle_profile_update()
+returns trigger as $
+begin
+  new.updated_at = now();
+  return new;
+end;
+$ language plpgsql security definer;
+
+-- Trigger to update updated_at on profile change
+create trigger on_profile_update
+  before update on public.profiles
+  for each row
+  execute procedure public.handle_profile_update();
 
 -- Realtime (Supabase) is enabled per table by default; ensure replica identity
 alter table public.team_members replica identity full;

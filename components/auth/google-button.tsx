@@ -1,18 +1,22 @@
 
-"use client"
+'use client'
 
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
+import { Button } from '@/components/ui/button'
+import { createClient } from '@/utils/supabase/client'
 
 export function GoogleSignInButton() {
-  const router = useRouter()
-
-  const handleClick = () => {
-    router.push("/onboarding")
+  const handleGoogleLogin = async () => {
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    })
   }
 
   return (
-    <Button onClick={handleClick} className="w-full cursor-target">
+    <Button onClick={handleGoogleLogin} className="w-full cursor-target">
       Sign in with Google
     </Button>
   )

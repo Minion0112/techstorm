@@ -29,7 +29,7 @@ export default function DashboardLayout({
                 />
             </div>
             <TargetCursor
-                spinDuration={1}
+                spinDuration={4}
                 hideDefaultCursor={true}
             />
 

@@ -1,27 +1,16 @@
 "use client"
 
-import { useEffect, useRef, useState, use } from "react"
+import { useState, use } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import JoinBurst from "@/components/matrix/join-burst"
-import { notifyTeamJoined } from "@/lib/matrix-loader"
+import { PixelMatrixLoader } from "@/components/pixel-matrix-loader"
 
 export default function TeamPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const [members, setMembers] = useState(["user1", "user2"]) // Mock members
+  const [isAddingMember, setIsAddingMember] = useState(false)
   const unwrappedParams = use(params)
   const team = { id: unwrappedParams.id, name: "My Team", code: "ABCDEF", members } // Mock team
-  const triggerKey = `${team?.id}:${members.length}`
-  const prevCountRef = useRef<number>(members.length)
-
-  useEffect(() => {
-    const prev = prevCountRef.current
-    const curr = members.length
-    if (typeof prev === "number" && curr > prev) {
-      notifyTeamJoined(1400)
-    }
-    prevCountRef.current = curr
-  }, [members.length])
 
   if (!team) {
     return (
@@ -59,6 +48,11 @@ export default function TeamPage({ params }: { params: Promise<{ id: string }> }
                 <span className="text-xs">{uid === team.members[0] ? "owner" : "member"}</span>
               </li>
             ))}
+            {isAddingMember && (
+              <li className="flex items-center justify-center border-white/20 px-3 py-2 bg-black">
+                <PixelMatrixLoader rows={2} cols={80} cellSize={4} gap={1} />
+              </li>
+            )}
           </ul>
           <div className="text-xs text-white/60">New members trigger a Matrix reveal.</div>
         </div>
@@ -67,10 +61,15 @@ export default function TeamPage({ params }: { params: Promise<{ id: string }> }
           <Button
             className="bg-black text-white border border-white hover:bg-white hover:text-black"
             onClick={() => {
-              setMembers([...members, `user${members.length + 1}`])
+              setIsAddingMember(true)
+              setTimeout(() => {
+                setMembers([...members, `user${members.length + 1}`])
+                setIsAddingMember(false)
+              }, 2500)
             }}
+            disabled={isAddingMember}
           >
-            Simulate teammate joining
+            {isAddingMember ? "Adding..." : "Simulate teammate joining"}
           </Button>
           <Button
             className="bg-black text-white border border-white hover:bg-white hover:text-black"

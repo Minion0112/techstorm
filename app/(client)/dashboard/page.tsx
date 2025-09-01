@@ -1,52 +1,84 @@
-"use client"
+'use client'
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
+import type React from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import Link from 'next/link'
+import { createClient } from '@/utils/supabase/client'
 
 export default function DashboardPage() {
   const router = useRouter()
-  const [teamName, setTeamName] = useState("")
-  const [joinCode, setJoinCode] = useState("")
+  const [teamName, setTeamName] = useState('')
+  const [joinCode, setJoinCode] = useState('')
+  const [profile, setProfile] = useState<any>(null)
+  const [teams, setTeams] = useState<any[]>([])
+  const supabase = createClient()
 
-  const profile = { bio: "user", handle: "user" } // Mock profile
-  const teams = [{ id: "1", name: "My Team", code: "ABCDEF" }] // Mock teams
+  useEffect(() => {
+    const getData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        setProfile(profileData);
+
+        const { data: teamsData } = await supabase.from('v_user_teams').select('*');
+        setTeams(teamsData || []);
+      }
+    };
+    getData();
+  }, [supabase]);
 
   async function onCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const name = teamName.trim()
     if (!name) return
-    // Mock team creation
-    const newTeam = { id: "2", name, code: "GHIJKL" }
-    teams.push(newTeam)
-    router.push(`/team/${newTeam.id}`)
+    
+    const { data: newTeam, error } = await supabase.rpc('create_team_with_owner', { p_name: name });
+
+    if (error) {
+        console.error('[v0] create error:', error);
+        return;
+    }
+
+    router.push(`/team/${newTeam.id}`);
   }
 
   async function onJoin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const code = joinCode.trim()
     if (!code) return
-    // Mock team joining
-    const team = teams.find((t) => t.code === code)
-    if (team) {
-      router.push(`/team/${team.id}`)
-    } else {
-      console.error("[v0] join error: Invalid join code")
+    
+    const { data: joinedTeam, error } = await supabase.rpc('join_team_by_code', { p_join_code: code });
+
+    if (error) {
+        console.error('[v0] join error:', error);
+        return;
     }
+
+    router.push(`/team/${joinedTeam.id}`);
   }
 
   return (
     <main className="min-h-dvh text-white  relative z-10 ">
       <div className="mx-auto max-w-3xl px-6 py-12 space-y-10">
-        <h1 className="text-2xl text-balance">
-          Welcome{profile?.bio ? `, ${profile.bio}` : ""}{" "}
-          <span className="text-white/50">@{profile?.handle}</span>
-        </h1>
+        <div className="flex items-center justify-between">
+            <h1 className="text-2xl text-balance">
+              Welcome{profile?.display_name ? `, ${profile.display_name}` : ''}{' '}
+              <span className="text-white/50">@{profile?.handle}</span>
+            </h1>
+            <Button
+                className="bg-black text-white border border-white hover:bg-white hover:text-black"
+                onClick={async () => {
+                    await supabase.auth.signOut();
+                    router.push('/');
+                }}
+            >
+                Sign out
+            </Button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-black border border-white">

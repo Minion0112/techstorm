@@ -1,9 +1,11 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 interface PixelMatrixLoaderProps {
   size?: number
+  rows?: number
+  cols?: number
   className?: string
   fullscreen?: boolean
   cellSize?: number
@@ -12,25 +14,29 @@ interface PixelMatrixLoaderProps {
 
 export function PixelMatrixLoader({
   size = 20,
-  className = "",
+  rows: numRows,
+  cols: numCols,
+  className = '',
   fullscreen = false,
-  cellSize = 14,
-  gap = 2,
+  cellSize = 4,
+  gap = 1,
 }: PixelMatrixLoaderProps) {
   const [pixels, setPixels] = useState<boolean[][]>([])
 
   useEffect(() => {
     const initGrid = () => {
-      if (fullscreen && typeof window !== "undefined") {
+      if (fullscreen && typeof window !== 'undefined') {
         const cols = Math.ceil(window.innerWidth / (cellSize + gap))
         const rows = Math.ceil(window.innerHeight / (cellSize + gap))
         return Array(rows)
           .fill(null)
           .map(() => Array(cols).fill(false))
       }
-      return Array(size)
+      const rows = numRows ?? size
+      const cols = numCols ?? size
+      return Array(rows)
         .fill(null)
-        .map(() => Array(size).fill(false))
+        .map(() => Array(cols).fill(false))
     }
 
     // initialize grid
@@ -41,7 +47,7 @@ export function PixelMatrixLoader({
       if (!fullscreen) return
       setPixels(initGrid())
     }
-    if (fullscreen) window.addEventListener("resize", onResize)
+    if (fullscreen) window.addEventListener('resize', onResize)
 
     // animation interval
     const interval = setInterval(() => {
@@ -74,41 +80,35 @@ export function PixelMatrixLoader({
 
     return () => {
       clearInterval(interval)
-      if (fullscreen) window.removeEventListener("resize", onResize)
+      if (fullscreen) window.removeEventListener('resize', onResize)
     }
-  }, [size, fullscreen, cellSize, gap])
+  }, [size, numRows, numCols, fullscreen, cellSize, gap])
 
-  const cols = pixels[0]?.length ?? size
+  const cols = pixels[0]?.length ?? numCols ?? size
 
   return (
-    <div className={`${fullscreen ? "w-screen h-screen" : "inline-block"} ${className}`}>
+    <div className={`${fullscreen ? 'w-screen h-screen' : 'inline-block'} ${className}`}>
       <div
-        className={`grid ${fullscreen ? "" : "p-4"}`}
+        className={`grid`}
         style={{
-          gap: fullscreen ? `${gap}px` : "0.25rem",
-          gridTemplateColumns: `repeat(${cols}, ${fullscreen ? `${cellSize}px` : "1fr"})`,
-          ...(fullscreen ? { width: "100%", height: "100%" } : { aspectRatio: "1" }),
+          gap: `${gap}px`,
+          gridTemplateColumns: `repeat(${cols}, ${cellSize}px)`,
         }}
       >
         {pixels.map((row, i) =>
           row.map((isActive, j) => (
             <div
               key={`${i}-${j}`}
-              className={`transition-opacity duration-100 ${isActive ? "bg-white opacity-100" : "bg-white/15 opacity-30"}`}
+              className={`transition-opacity duration-100 ${isActive ? 'bg-white opacity-100' : 'bg-white/15 opacity-30'}`}
               style={{
-                width: fullscreen ? `${cellSize}px` : "0.5rem",
-                height: fullscreen ? `${cellSize}px` : "0.5rem",
+                width: `${cellSize}px`,
+                height: `${cellSize}px`,
                 transitionDelay: `${(i + j) * 10}ms`,
               }}
             />
           )),
         )}
       </div>
-      {!fullscreen && (
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-300/80 animate-pulse">Generating pixels...</p>
-        </div>
-      )}
     </div>
   )
 }
