@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 
 type Errors = Partial<
-    Record<'name' | 'mobile' | 'email' | 'registration' | 'hostelName' | 'roomNo' | 'undertakingFile' | 'handle', string>
+    Record<'name' | 'mobile' | 'email' | 'registration' | 'hostelName' | 'roomNo' | 'undertakingFile' | 'handle' | 'gender', string>
 >
 
 export default function NewForm() {
@@ -21,6 +21,7 @@ export default function NewForm() {
     const [handle, setHandle] = useState('')
     const [mobile, setMobile] = useState('')
     const [email, setEmail] = useState('')
+    const [gender, setGender] = useState('')
     const [registration, setRegistration] = useState('')
     const [isHosteler, setIsHosteler] = useState<boolean>(false)
     const [hostelName, setHostelName] = useState<string>('')
@@ -58,6 +59,10 @@ export default function NewForm() {
 
         if (!/^\d{10}$/.test(mobile.trim())) {
             next.mobile = 'Enter a 10-digit mobile number.'
+        }
+
+        if (!gender.trim()) {
+            next.gender = 'Gender is required.'
         }
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
@@ -105,11 +110,12 @@ export default function NewForm() {
                 display_name: name,
                 handle: handle,
                 mobile: mobile,
+                gender: gender,
                 registration_number: registration,
                 is_hosteler: isHosteler,
                 hostel_name: hostelName,
                 room_no: roomNo,
-            }).select();
+            });
 
             if (error) {
                 // handle error, maybe show a toast
@@ -186,6 +192,22 @@ export default function NewForm() {
                             {errors.mobile}
                         </p>
                     )}
+                </div>
+
+                {/* Gender */}
+                <div className="space-y-2">
+                    <Label htmlFor="gender">Gender</Label>
+                    <Select value={gender} onValueChange={setGender}>
+                        <SelectTrigger id="gender" aria-invalid={!!errors.gender} className="cursor-target text-background" >
+                            <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="male" className="cursor-target text-background">Male</SelectItem>
+                            <SelectItem value="female" className="cursor-target text-background">Female</SelectItem>
+                            <SelectItem value="other" className="cursor-target text-background">Other</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    {errors.gender && <p className="text-sm text-destructive">{errors.gender}</p>}
                 </div>
 
                 {/* Email */}

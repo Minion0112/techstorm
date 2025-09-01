@@ -1,7 +1,8 @@
-"use client"
+'use client'
 
 import PixelBlast from "@/components/transitions/back"
 import TargetCursor from "@/components/transitions/target-cursor"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function DashboardLayout({
     children,
@@ -14,7 +15,7 @@ export default function DashboardLayout({
                 <PixelBlast
                     variant="square"
                     pixelSize={5}
-                    color="#908e8e"
+                    color="#835E6A"
                     patternScale={1.75}
                     patternDensity={1}
                     pixelSizeJitter={0}
@@ -34,6 +35,7 @@ export default function DashboardLayout({
             />
 
             <main>{children}</main>
+            <Toaster />
         </>
 
     )

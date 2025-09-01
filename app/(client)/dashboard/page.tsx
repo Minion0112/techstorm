@@ -10,6 +10,7 @@ import { createClient } from '@/utils/supabase/client'
 import FuzzyText from '@/components/transitions/glitch'
 import ElectricBorder from '@/components/transitions/electric-grid'
 import ProfileCard from '@/components/transitions/profile'
+import { toast } from 'sonner'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -19,11 +20,13 @@ export default function DashboardPage() {
   const [team, setTeam] = useState<any>(null)
   const [members, setMembers] = useState<any[]>([])
   const [showCreate, setShowCreate] = useState(true)
+  const [user, setUser] = useState<any>(null)
   const supabase = createClient()
 
   useEffect(() => {
     const getData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
       if (user) {
         const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
         setProfile(profileData);
@@ -50,6 +53,7 @@ export default function DashboardPage() {
 
     if (error) {
         console.error('[v0] create error:', error);
+        toast.error(error.message);
         return;
     }
 
@@ -65,6 +69,7 @@ export default function DashboardPage() {
 
     if (error) {
         console.error('[v0] join error:', error);
+        toast.error(error.message);
         return;
     }
 
@@ -100,20 +105,24 @@ export default function DashboardPage() {
             </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
             <div className="space-y-8">
                 {team ? (
                     <div className="space-y-8">
                         <div className="border border-white p-6">
                             <h3 className="text-xl mb-4">Team: {team.name}</h3>
                             <div className="flex items-center justify-between">
-                                <p className="text-sm text-white/50">Join Code: {team.join_code}</p>
-                                <Button
-                                    className="bg-black text-white border border-white hover:bg-white hover:text-black"
-                                    onClick={() => navigator.clipboard.writeText(team.join_code)}
-                                >
-                                    Copy
-                                </Button>
+                                <p className="text-sm text-white/50">
+                                    {team.is_finalized ? 'Finalized' : `Join Code: ${team.join_code}`}
+                                </p>
+                                {!team.is_finalized && (
+                                    <Button
+                                        className="bg-black text-white border border-white hover:bg-white hover:text-black"
+                                        onClick={() => navigator.clipboard.writeText(team.join_code)}
+                                    >
+                                        Copy
+                                    </Button>
+                                )}
                             </div>
                         </div>
                         <div className="border border-white p-6">
@@ -130,10 +139,33 @@ export default function DashboardPage() {
                                 ))}
                             </ul>
                         </div>
-
-                        <Button onClick={onLeave} className="w-full bg-transparent text-white border border-white hover:bg-white hover:text-black">
-                            Leave Team
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button onClick={onLeave} className="w-full bg-transparent text-white border border-white hover:bg-white hover:text-black">
+                                Leave Team
+                            </Button>
+                            {user && team && user.id === team.owner_id && !team.is_finalized && (
+                                <Button
+                                    className="w-full  text-white "
+                                    onClick={async () => {
+                                        const { error } = await supabase.rpc('finalize_team', { p_team_id: team.id });
+                                        if (error) {
+                                            toast.error(error.message);
+                                        } else {
+                                            // Refresh data
+                                            const { data: teamData } = await supabase
+                                                .from('teams')
+                                                .select('*')
+                                                .eq('id', team.id)
+                                                .single();
+                                            setTeam(teamData);
+                                        }
+                                    }}
+                                    disabled={members.length < 1 || members.length > 5}
+                                >
+                                    Finalize Team
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 ) : (
                     <div className="space-y-6">
@@ -144,11 +176,12 @@ export default function DashboardPage() {
                             </div>
                         </div>
 
-                        <ElectricBorder>
                             <div className="p-8">
                                 {showCreate ? (
                                     <form onSubmit={onCreate} className="space-y-4">
-                                        <FuzzyText fontSize="1.5rem" fontFamily="monospace">Create a new team</FuzzyText>
+                                        <div className="-ml-13">
+                                                  <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>Create a new team</FuzzyText>
+                                        </div>
                                         <Input
                                         value={teamName}
                                         onChange={(e) => setTeamName(e.target.value)}
@@ -164,7 +197,10 @@ export default function DashboardPage() {
                                     </form>
                                 ) : (
                                     <form onSubmit={onJoin} className="space-y-4">
+                                                  <div className="-ml-13">
+                                        
                                         <FuzzyText fontSize="1.5rem" fontFamily="monospace">Join an existing team</FuzzyText>
+                                        </div>
                                         <Input
                                         value={joinCode}
                                         onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
@@ -180,7 +216,6 @@ export default function DashboardPage() {
                                     </form>
                                 )}
                             </div>
-                        </ElectricBorder>
                     </div>
                 )}
             </div>
@@ -196,9 +231,9 @@ export default function DashboardPage() {
                         behindGradient={blackAndWhiteBehindGradient}
                         innerGradient={blackAndWhiteInnerGradient}
                         showUserInfo={true}
-                        contactText={team ? `Code: ${team.join_code}` : "No Team"}
+                        contactText={team ? (team.is_finalized ? 'Finalized' : `Code: ${team.join_code}`) : "No Team"}
                         onContactClick={() => {
-                            if (team) {
+                            if (team && !team.is_finalized) {
                                 navigator.clipboard.writeText(team.join_code)
                             }
                         }}

@@ -10,6 +10,9 @@ export function GoogleSignInButton() {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
+        queryParams:{
+          hd: 'bmu.edu.in'
+        },
         redirectTo: `${location.origin}/auth/callback`,
       },
     })
