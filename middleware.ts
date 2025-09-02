@@ -46,7 +46,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - anything with a dot (static files)
      */
-    '/((?!_next/static|_next/image|favicon.ico|auth/callback|auth/auth-code-error).*)',
+    '/((?!_next/static|_next/image|favicon.ico|auth/callback|auth/auth-code-error|.*\..*).*)',
   ],
 };
