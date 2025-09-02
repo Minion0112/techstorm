@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from "react"
 import PixelBlast from "@/components/transitions/back"
 import TargetCursor from "@/components/transitions/target-cursor"
 import { Toaster } from "@/components/ui/sonner"
@@ -9,6 +10,19 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 768)
+        }
+        
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
     return (
         <>
             <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
@@ -29,10 +43,12 @@ export default function DashboardLayout({
                     noiseAmount={0}
                 />
             </div>
-            <TargetCursor
-                spinDuration={4}
-                hideDefaultCursor={true}
-            />
+            {!isMobile && (
+                <TargetCursor
+                    spinDuration={4}
+                    hideDefaultCursor={true}
+                />
+            )}
 
             <main>{children}</main>
             <Toaster />
