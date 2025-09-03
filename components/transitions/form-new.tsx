@@ -147,6 +147,7 @@ export default function NewForm() {
             }
 
             setSubmitted(true)
+            router.refresh()
             router.push('/dashboard');
         } finally {
             setSubmitting(false)
@@ -177,7 +178,7 @@ export default function NewForm() {
 
                 {/* Handle */}
                 <div className="space-y-2">
-                    <Label htmlFor="handle">Handle</Label>
+                    <Label htmlFor="handle">Username</Label>
                     <Input
                         id="handle"
                         placeholder="your-unique-handle"
@@ -298,7 +299,7 @@ export default function NewForm() {
 
                 {/* Conditional: Hosteler fields */}
                 {isHosteler && (
-                    <div className="grid grid-cols-2 gap-5 min-w-[600px]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="space-y-2">
                             <Label htmlFor="hostelName">Hostel Name</Label>
                             <Select value={hostelName} onValueChange={setHostelName}>
@@ -338,7 +339,7 @@ export default function NewForm() {
 
                 {/* Conditional: Non-hosteler undertaking */}
                 {!isHosteler && (
-                    <div className="space-y-3 rounded-md border bg-foreground p-4 min-w-[600px]">
+                    <div className="space-y-3 rounded-md border bg-foreground p-4">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <div className="space-y-1">
                                 <Label>Undertaking Form</Label>
