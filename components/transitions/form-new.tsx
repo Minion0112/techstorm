@@ -386,7 +386,7 @@ export default function NewForm() {
                                     ref={studentFileInputRef}
                                     id="student-undertaking"
                                     type="file"
-                                    accept=".pdf,.png,.jpg,.jpeg"
+                                    accept=".pdf,.png,.jpg,.jpeg,.docx"
                                     className="hidden cursor-target"
                                     onChange={(e) => {
                                         const f = e.target.files?.[0] ?? null
@@ -439,7 +439,7 @@ export default function NewForm() {
                                     ref={parentFileInputRef}
                                     id="parent-undertaking"
                                     type="file"
-                                    accept=".pdf,.png,.jpg,.jpeg"
+                                    accept=".pdf,.png,.jpg,.jpeg,.docx"
                                     className="hidden cursor-target"
                                     onChange={(e) => {
                                         const f = e.target.files?.[0] ?? null
