@@ -41,9 +41,9 @@ export default function RedbullSignupPage() {
   return (
     <main className="h-dvh text-white relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-        <div className="hidden md:flex items-center justify-center p-12">
+        <div className="flex items-center justify-center p-6 md:p-12">
           <div className="text-center space-y-6">
-            <h1 className="text-4xl font-bold">Please Complete This Form to Participate in the Event</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold">Please Complete This Form to Participate in the Event</h1>
             <Button
               onClick={() => {
                 window.open("https://www.redbull.com/in-en/events/red-bull-tetris-india", "_blank")

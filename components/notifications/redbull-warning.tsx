@@ -3,9 +3,9 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
 import { Button } from "../ui/button"
-import { TriangleAlert } from "lucide-react"
+import { TriangleAlert, X } from "lucide-react"
 
-export function RedbullWarning() {
+export function RedbullWarning({ onDismiss }: { onDismiss: () => void }) {
   return (
     <Alert 
       variant="destructive" 
@@ -19,13 +19,23 @@ export function RedbullWarning() {
             Complete your Red Bull registration by submitting your image to participate in the event.
           </AlertDescription>
         </div>
-        <Button 
-          asChild 
-          size="sm"
-          className="bg-red-600 hover:bg-red-700 text-white border-red-500 shrink-0"
-        >
-          <Link href="/redbull-signup">Complete Sign Up</Link>
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button 
+            asChild 
+            size="sm"
+            className="bg-red-600 hover:bg-red-700 text-white border-red-500 shrink-0"
+          >
+            <Link href="/redbull-signup">Complete Sign Up</Link>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onDismiss}
+            className="text-red-200/80 hover:text-white hover:bg-red-900/50"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </Alert>
   )

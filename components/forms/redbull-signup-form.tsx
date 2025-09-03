@@ -123,7 +123,7 @@ export default function RedbullSignupForm() {
     return (
         <form onSubmit={onSubmit} noValidate className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <div className="space-y-3 rounded-md border bg-foreground p-4 min-w-[600px]">
+                <div className="space-y-3 rounded-md border bg-foreground p-4">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-1">
                             <Label>Submit Your Images</Label>
