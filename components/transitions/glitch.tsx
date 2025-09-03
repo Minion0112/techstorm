@@ -18,7 +18,7 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
     fontFamily = "inherit",
     color = "#fff",
     enableHover = true,
-    baseIntensity = 0.09,
+    baseIntensity = 0.05,
     hoverIntensity = 0.5,
 }) => {
     const canvasRef = useRef<HTMLCanvasElement & { cleanupFuzzyText?: () => void }>(null);

@@ -15,7 +15,7 @@ export default function Section({
   customContent,
 }: SectionProps) {
   return (
-    <section id={id} className="relative h-screen w-full snap-start flex flex-col justify-center p-8 md:p-16 lg:p-24">
+    <section id={id} className="relative h-auto min-h-screen w-full snap-start flex flex-col justify-center p-8 md:p-16 lg:p-24">
       {subtitle && (
         <motion.div
           className="mb-12"

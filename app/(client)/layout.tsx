@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import PixelBlast from "@/components/transitions/back"
 import TargetCursor from "@/components/transitions/target-cursor"
 import { Toaster } from "@/components/ui/sonner"
+import { createClient } from "@/utils/supabase/client"
+import { RedbullWarning } from "@/components/notifications/redbull-warning"
 
 export default function DashboardLayout({
     children,
@@ -11,6 +13,7 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     const [isMobile, setIsMobile] = useState(false)
+    const [showRedbullWarning, setShowRedbullWarning] = useState(false)
 
     useEffect(() => {
         const checkMobile = () => {
@@ -23,13 +26,33 @@ export default function DashboardLayout({
         return () => window.removeEventListener('resize', checkMobile)
     }, [])
 
+    useEffect(() => {
+        const checkRedbullSignup = async () => {
+            const supabase = createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('is_signed_up_for_red_bull')
+                    .eq('id', user.id)
+                    .single()
+
+                if (profile && !profile.is_signed_up_for_red_bull) {
+                    setShowRedbullWarning(true)
+                }
+            }
+        }
+        checkRedbullSignup()
+    }, [])
+
     return (
         <>
+            {showRedbullWarning && <RedbullWarning />}
             <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
                 <PixelBlast
                     variant="square"
                     pixelSize={5}
-                    color="#835E6A"
+                    color="#781C20"
                     patternScale={1.75}
                     patternDensity={1}
                     pixelSizeJitter={0}

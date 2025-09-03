@@ -37,7 +37,7 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
       <div className="mx-auto max-w-5xl text-center">
         {/* Date line accent color to red */}
         <p className="font-extrabold tracking-[0.2em] text-red-500 text-lg md:text-2xl uppercase">
-           4 SEPT - 7 SEPT 2025
+           <span className="cursor-target px-4">4 SEPT - 7 SEPT 2025</span>
         </p>
 
         <h1
@@ -45,7 +45,7 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
           className="mt-6 text-balance font-black uppercase leading-tight text-[clamp(1rem,4vw,2.5rem)] sm:text-[clamp(1.25rem,4.5vw,3rem)] md:text-[clamp(1.75rem,5vw,4rem)] lg:text-[clamp(2rem,5.5vw,4.5rem)]"
         >
           {/* Line 1 */}
-          <span className="relative block">
+          <span className="relative block cursor-target">
             {/* Magenta offset layer to red */}
             <span
               aria-hidden="true"
@@ -78,9 +78,10 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
 
 function buttonClasses() {
   return cn(
+    
     // White pill-like button with strong letterspacing
-    "inline-flex items-center justify-center rounded-md border border-white/80 bg-white px-8 py-4",
-    "font-extrabold tracking-[0.35em] text-sm text-black",
+    "inline-flex items-center justify-center rounded-md border border-white/80 bg-white px-8 py-4 cursor-target",
+    "font-extrabold tracking-[0.35em] text-sm text-black ",
     // Simple motion and a faux depth shadow
     "shadow-[0_12px_0_#000] hover:-translate-y-px active:translate-y-[2px] transition",
     // Accessible focus

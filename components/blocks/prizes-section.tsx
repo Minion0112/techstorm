@@ -19,10 +19,10 @@ export function PrizesSection({ className }: { className?: string }) {
         <header className="mb-8 md:mb-10">
           <h2
             id="prizes-heading"
-            className="text-balance font-heading text-5xl md:text-7xl font-extrabold tracking-tight"
+            className="text-balance font-heading text-5xl md:text-7xl font-extrabold tracking-tight "
             style={{ textShadow: "2px 2px 0 #000000, 4px 4px 0 #dc2626" }}
           >
-            PRIZES
+            <span className="cursor-target">PRIZES</span>
           </h2>
           <p className="mt-4 max-w-3xl text-pretty text-base md:text-lg leading-relaxed text-neutral-200">
             Get ready to launch your project! The top performers will receive awards, prizes, and recognition
@@ -32,7 +32,7 @@ export function PrizesSection({ className }: { className?: string }) {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8">
           {/* Left main prize */}
           <div className="md:col-span-3">
-            <div className=" border border-red-600 overflow-hidden h-full mr-2">
+            <div className=" border border-red-600 overflow-hidden h-full mr-2 cursor-target">
               {/* red main panel */}
               <div className="relative bg-red-700/90 p-6 md:p-10">
                 {/* decorative numeral */}
@@ -45,26 +45,21 @@ export function PrizesSection({ className }: { className?: string }) {
 
                 <div className="space-y-3 md:space-y-4">
                   <p className="text-xs md:text-sm font-bold tracking-[0.2em] text-white/90 uppercase">Winner</p>
-                  <h3
-                    className="text-3xl md:text-5xl font-heading font-black leading-none uppercase"
-                    style={{ textShadow: "1px 1px 0 #000000, 3px 3px 0 #dc2626" }}
-                  >
-                    Worth of Prizes
-                  </h3>
+                   
                   <p className="text-5xl md:text-7xl font-black text-white">Rs 12,500</p>
                   <p className="text-sm md:text-base font-semibold tracking-wide text-white/90 uppercase">
                     worth of prizes
                   </p>
                 </div>
 
-                <p className="mt-6 md:mt-10 max-w-xl text-pretty text-sm md:text-base leading-relaxed text-neutral-100">
+                <p className="mt-6 md:mt-10 max-w-xl text-pretty text-sm md:text-base leading-relaxed text-neutral-100 hidden md:block">
                   Prepare for the project launch! Outstanding contributors will be rewarded with awards, prizes, and
                   acknowledgment.
                 </p>
               </div>
 
               {/* black footer attached to big box */}
-              <div className="border-t border-red-600 bg-black p-4 text-center">
+              <div className="border-t border-red-600 bg-black p-4 text-center hidden md:block">
                 <p className="font-heading text-sm md:text-base font-bold text-white">
                   All participants will receive a Certificate of Participation
                 </p>
@@ -76,7 +71,7 @@ export function PrizesSection({ className }: { className?: string }) {
           <div className="md:col-span-2">
             <div className="h-full  border border-red-600 overflow-hidden mr-2">
               {/* Item 1 */}
-              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-red-700/90">
+              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-red-700/90 cursor-target">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute right-3 -top-4 text-7xl font-black text-red-900/30 select-none"
@@ -93,7 +88,7 @@ export function PrizesSection({ className }: { className?: string }) {
               <div className="h-px bg-red-800" />
 
               {/* Item 2 */}
-              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-black">
+              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-black cursor-target">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute right-3 -top-4 text-7xl font-black text-red-900/30 select-none"
@@ -110,7 +105,7 @@ export function PrizesSection({ className }: { className?: string }) {
               <div className="h-px bg-red-800" />
 
               {/* Item 3 */}
-              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-red-700/90">
+              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-red-700/90 cursor-target">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute right-3 -top-4 text-7xl font-black text-red-900/30 select-none"
@@ -127,7 +122,7 @@ export function PrizesSection({ className }: { className?: string }) {
               <div className="h-px bg-red-800" />
 
               {/* Item 4 */}
-              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-black">
+              <div className="relative p-5 md:p-6 flex items-center gap-4 md:gap-5 bg-black cursor-target">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute right-3 -top-4 text-7xl font-black text-red-900/30 select-none"

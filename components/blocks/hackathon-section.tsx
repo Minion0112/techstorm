@@ -12,13 +12,12 @@ export function HackathonSection({
         <div className="mb-10 md:mb-12">
           <div className="mb-6">
             <div
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-none tracking-tight uppercase text-balance"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-none tracking-tight uppercase text-balance "
               style={{
                 color: "#fff",
                 textShadow: "2px 2px 0 #000, 6px 8px 0 #ef4444, 8px 12px 18px rgba(239,68,68,0.35)",
               }}
-            >
-              24 Hour HACKATHON
+            ><span className="cursor-target">24 Hour HACKATHON</span>
             </div>
           </div>
 
@@ -32,7 +31,7 @@ export function HackathonSection({
         <div className="border-2 border-red-700 overflow-hidden mr-2 ">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-0 ">
             {/* Day 1 — solid red with subtle watermark */}
-            <div className="relative bg-red-600 p-6 md:p-8">
+            <div className="relative bg-red-600 p-6 md:p-8 cursor-target">
               <span
                 className="pointer-events-none select-none absolute -top-2 -right-2 text-7xl md:text-8xl font-extrabold text-black/15 leading-none md:block"
                 aria-hidden="true"
@@ -51,7 +50,7 @@ export function HackathonSection({
             </div>
 
             {/* Day 2 — outlined, black fill, red border; md divider to remove visual gap */}
-            <div className="relative bg-black p-6 md:p-8 border-t-2 md:border-t-0 md:border-l-2 border-red-700">
+            <div className="relative bg-black p-6 md:p-8 border-t-2 md:border-t-0 md:border-l-2 border-red-700 cursor-target">
               <span
                 className="pointer-events-none select-none absolute -top-2 -right-2 text-7xl md:text-8xl font-extrabold text-red-700/20 leading-none md:block"
                 aria-hidden="true"
@@ -70,7 +69,7 @@ export function HackathonSection({
             </div>
 
             {/* Day 3 — deeper red, md divider, with watermark */}
-            <div className="relative bg-red-700 p-6 md:p-8 border-t-2 md:border-t-0 md:border-l-2 border-red-700">
+            <div className="relative bg-red-700 p-6 md:p-8 border-t-2 md:border-t-0 md:border-l-2 border-red-700 cursor-target">
               <span
                 className="pointer-events-none select-none absolute -top-2 -right-2 text-7xl md:text-8xl font-extrabold text-black/15 leading-none md:block"
                 aria-hidden="true"
@@ -89,7 +88,7 @@ export function HackathonSection({
             </div>
 
             {/* Day 4 — full-width row with black/red styling and top divider, no gaps */}
-            <div className="relative bg-black p-6 md:p-8 border-t-2 border-red-700 col-span-1 md:col-span-3">
+            <div className="relative bg-black p-6 md:p-8 border-t-2 border-red-700 col-span-1 md:col-span-3 cursor-target">
               <span
                 className="pointer-events-none select-none absolute -top-2 -right-2 text-7xl md:text-8xl font-extrabold text-red-700/20 leading-none md:block"
                 aria-hidden="true"

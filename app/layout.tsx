@@ -10,7 +10,7 @@ import PixelBlast from "@/components/transitions/back"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="antialiased">
+    <html lang="en" className="light antialiased">
       <body className={`bg-black text-white font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         
         <Suspense fallback={null}>{children}</Suspense>

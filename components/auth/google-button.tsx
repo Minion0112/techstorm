@@ -19,8 +19,15 @@ export function GoogleSignInButton() {
   }
 
   return (
-    <Button onClick={handleGoogleLogin} className="w-full cursor-target">
-      Sign in with Google
-    </Button>
+    <div className="w-full h-full flex items-center justify-center">
+      <button
+        onClick={handleGoogleLogin}
+        id="prizes-heading"
+        className="text-balance font-heading text-5xl md:text-7xl  tracking-tight hover:scale-[1.05] transition duration-300 ease-in-out cursor-pointer cursor-target"
+        style={{ textShadow: "2px 2px 0 #000000, 4px 4px 0 #dc2626" }}
+      >
+        Register Now / Login
+      </button>
+    </div>
   )
 }
