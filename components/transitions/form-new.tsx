@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 
 type Errors = Partial<
-    Record<'name' | 'mobile' | 'email' | 'registration' | 'hostelName' | 'roomNo' | 'undertakingFile' | 'handle' | 'gender', string>
+    Record<'name' | 'mobile' | 'email' | 'registration' | 'hostelName' | 'roomNo' | 'studentUndertakingFile' | 'parentUndertakingFile' | 'handle' | 'gender', string>
 >
 
 export default function NewForm() {
@@ -26,12 +26,14 @@ export default function NewForm() {
     const [isHosteler, setIsHosteler] = useState<boolean>(false)
     const [hostelName, setHostelName] = useState<string>('')
     const [roomNo, setRoomNo] = useState<string>('')
-    const [undertakingFile, setUndertakingFile] = useState<File | null>(null)
+    const [studentUndertakingFile, setStudentUndertakingFile] = useState<File | null>(null)
+    const [parentUndertakingFile, setParentUndertakingFile] = useState<File | null>(null)
     const [errors, setErrors] = useState<Errors>({})
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
 
-    const fileInputRef = useRef<HTMLInputElement>(null)
+    const studentFileInputRef = useRef<HTMLInputElement>(null)
+    const parentFileInputRef = useRef<HTMLInputElement>(null)
     const supabase = createClient()
 
     useEffect(() => {
@@ -81,8 +83,11 @@ export default function NewForm() {
                 next.roomNo = 'Enter your room number.'
             }
         } else {
-            if (!undertakingFile) {
-                next.undertakingFile = 'Please upload a signed undertaking.'
+            if (!studentUndertakingFile) {
+                next.studentUndertakingFile = 'Please upload a signed student undertaking.'
+            }
+            if (!parentUndertakingFile) {
+                next.parentUndertakingFile = 'Please upload a signed parent undertaking.'
             }
         }
 
@@ -105,23 +110,42 @@ export default function NewForm() {
                 return;
             }
 
-            let undertaking_url = null;
-            if (undertakingFile) {
+            let student_undertaking_url = null;
+            if (studentUndertakingFile) {
                 const { data, error } = await supabase.storage
                     .from('undertakings')
-                    .upload(`${user.id}/${undertakingFile.name}`,
-                    undertakingFile,
+                    .upload(`${user.id}/student_${studentUndertakingFile.name}`,
+                    studentUndertakingFile,
                     {
                         upsert: true,
                     });
 
                 if (error) {
-                    console.error('Error uploading file:', error);
+                    console.error('Error uploading student undertaking:', error);
                     return;
                 }
 
                 const { data: { publicUrl } } = supabase.storage.from('undertakings').getPublicUrl(data.path);
-                undertaking_url = publicUrl;
+                student_undertaking_url = publicUrl;
+            }
+
+            let parent_undertaking_url = null;
+            if (parentUndertakingFile) {
+                const { data, error } = await supabase.storage
+                    .from('undertakings')
+                    .upload(`${user.id}/parent_${parentUndertakingFile.name}`,
+                    parentUndertakingFile,
+                    {
+                        upsert: true,
+                    });
+
+                if (error) {
+                    console.error('Error uploading parent undertaking:', error);
+                    return;
+                }
+
+                const { data: { publicUrl } } = supabase.storage.from('undertakings').getPublicUrl(data.path);
+                parent_undertaking_url = publicUrl;
             }
 
             const { error } = await supabase.from('profiles').upsert({
@@ -134,7 +158,8 @@ export default function NewForm() {
                 is_hosteler: isHosteler,
                 hostel_name: hostelName,
                 room_no: roomNo,
-                undertaking_url: undertaking_url,
+                undertaking_url: student_undertaking_url,
+                parent_undertaking_url: parent_undertaking_url,
             });
 
             if (error) {
@@ -287,7 +312,8 @@ export default function NewForm() {
                                 setIsHosteler(v)
                                 setHostelName('')
                                 setRoomNo('')
-                                setUndertakingFile(null)
+                                setStudentUndertakingFile(null)
+                                setParentUndertakingFile(null)
                                 setErrors({})
                                 setSubmitted(false)
                             }}
@@ -339,59 +365,113 @@ export default function NewForm() {
 
                 {/* Conditional: Non-hosteler undertaking */}
                 {!isHosteler && (
-                    <div className="space-y-3 rounded-md border bg-foreground p-4">
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                            <div className="space-y-1">
-                                <Label>Undertaking Form</Label>
-                                <p className="text-xs text-muted-foreground">
-                                    Download the undertaking template, sign it, and upload a scanned copy (PDF or image).
-                                </p>
+                    <>
+                        <div className="space-y-3 rounded-md border bg-foreground p-4">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="space-y-1">
+                                    <Label>Student Undertaking</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Download the undertaking template, sign it, and upload a scanned copy (PDF or image).
+                                    </p>
+                                </div>
+                                <Button asChild className="cursor-target px-4 py-2">
+                                    <a href="https://supa.t-bash.space/storage/v1/object/public/newbro//student%20undertaking.docx" download="undertaking-form.docx">
+                                        Download Template
+                                    </a>
+                                </Button>
                             </div>
-                            <Button asChild className="cursor-target px-4 py-2">
-                                {/* Replace href with your actual template file path when available */}
-                                <a href="https://supa.t-bash.space/storage/v1/object/public/newbro//Undertaking%20for%20Day%20Scholars%20to%20stay%20on%20campus%20-%20Chords%20and%20Choreo%20by%20PFA.docx" download="undertaking-form.docx">
-                                    Download Template
-                                </a>
-                            </Button>
+
+                            <div className="flex items-center gap-3">
+                                <input
+                                    ref={studentFileInputRef}
+                                    id="student-undertaking"
+                                    type="file"
+                                    accept=".pdf,.png,.jpg,.jpeg"
+                                    className="hidden cursor-target"
+                                    onChange={(e) => {
+                                        const f = e.target.files?.[0] ?? null
+                                        setStudentUndertakingFile(f)
+                                        setSubmitted(false)
+                                        if (errors.studentUndertakingFile) {
+                                            setErrors((prev) => ({ ...prev, studentUndertakingFile: undefined }))
+                                        }
+                                    }}
+                                    aria-invalid={!!errors.studentUndertakingFile}
+                                    aria-describedby={errors.studentUndertakingFile ? 'student-undertaking-error' : undefined}
+                                />
+                                <Button
+                                    type="button"
+                                    onClick={() => studentFileInputRef.current?.click()}
+                                    aria-controls="student-undertaking"
+                                    className="cursor-target"
+                                >
+                                    Upload
+                                </Button>
+                                <span className="text-sm text-muted-foreground truncate">
+                                    {studentUndertakingFile ? studentUndertakingFile.name : 'No file selected'}
+                                </span>
+                            </div>
+
+                            {errors.studentUndertakingFile && (
+                                <p id="student-undertaking-error" className="text-sm text-destructive">
+                                    {errors.studentUndertakingFile}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <input
-                                ref={fileInputRef}
-                                id="undertaking"
-                                type="file"
-                                accept=".pdf,.png,.jpg,.jpeg"
-                                className="hidden cursor-target"
-                                onChange={(e) => {
-                                    const f = e.target.files?.[0] ?? null
-                                    setUndertakingFile(f)
-                                    setSubmitted(false)
-                                    if (errors.undertakingFile) {
-                                        setErrors((prev) => ({ ...prev, undertakingFile: undefined }))
-                                    }
-                                }}
-                                aria-invalid={!!errors.undertakingFile}
-                                aria-describedby={errors.undertakingFile ? 'undertaking-error' : undefined}
-                            />
-                            <Button
-                                type="button"
-                                onClick={() => fileInputRef.current?.click()}
-                                aria-controls="undertaking"
-                                className="cursor-target"
-                            >
-                                Upload
-                            </Button>
-                            <span className="text-sm text-muted-foreground truncate">
-                                {undertakingFile ? undertakingFile.name : 'No file selected'}
-                            </span>
-                        </div>
+                        <div className="space-y-3 rounded-md border bg-foreground p-4">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="space-y-1">
+                                    <Label>Parent Undertaking</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Download the undertaking template, have it signed by a parent/guardian, and upload a scanned copy.
+                                    </p>
+                                </div>
+                                <Button asChild className="cursor-target px-4 py-2">
+                                    <a href="https://supa.t-bash.space/storage/v1/object/public/newbro//parent%20undertaking.docx" download="undertaking-form.docx">
+                                        Download Template
+                                    </a>
+                                </Button>
+                            </div>
 
-                        {errors.undertakingFile && (
-                            <p id="undertaking-error" className="text-sm text-destructive">
-                                {errors.undertakingFile}
-                            </p>
-                        )}
-                    </div>
+                            <div className="flex items-center gap-3">
+                                <input
+                                    ref={parentFileInputRef}
+                                    id="parent-undertaking"
+                                    type="file"
+                                    accept=".pdf,.png,.jpg,.jpeg"
+                                    className="hidden cursor-target"
+                                    onChange={(e) => {
+                                        const f = e.target.files?.[0] ?? null
+                                        setParentUndertakingFile(f)
+                                        setSubmitted(false)
+                                        if (errors.parentUndertakingFile) {
+                                            setErrors((prev) => ({ ...prev, parentUndertakingFile: undefined }))
+                                        }
+                                    }}
+                                    aria-invalid={!!errors.parentUndertakingFile}
+                                    aria-describedby={errors.parentUndertakingFile ? 'parent-undertaking-error' : undefined}
+                                />
+                                <Button
+                                    type="button"
+                                    onClick={() => parentFileInputRef.current?.click()}
+                                    aria-controls="parent-undertaking"
+                                    className="cursor-target"
+                                >
+                                    Upload
+                                </Button>
+                                <span className="text-sm text-muted-foreground truncate">
+                                    {parentUndertakingFile ? parentUndertakingFile.name : 'No file selected'}
+                                </span>
+                            </div>
+
+                            {errors.parentUndertakingFile && (
+                                <p id="parent-undertaking-error" className="text-sm text-destructive">
+                                    {errors.parentUndertakingFile}
+                                </p>
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
 
