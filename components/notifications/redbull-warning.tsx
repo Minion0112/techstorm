@@ -28,7 +28,6 @@ export function RedbullWarning({ onDismiss }: { onDismiss: () => void }) {
             <Link href="/redbull-signup">Complete Sign Up</Link>
           </Button>
           <Button
-            variant="ghost"
             size="icon"
             onClick={onDismiss}
             className="text-red-200/80 hover:text-white hover:bg-red-900/50"
