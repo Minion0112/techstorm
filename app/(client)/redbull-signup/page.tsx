@@ -46,10 +46,10 @@ export default function RedbullSignupPage() {
             <h1 className="text-4xl font-bold">Please Complete This Form to Participate in the Event</h1>
             <Button
               onClick={() => {
-                window.open("https://forms.gle/esfVGsqYuuaWx6Bo7", "_blank")
+                window.open("https://www.redbull.com/in-en/events/red-bull-tetris-india", "_blank")
               }}
             >
-              Complete Google Form
+              Red Bull Tetris Link
             </Button>
           </div>
         </div>

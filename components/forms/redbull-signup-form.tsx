@@ -9,23 +9,28 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { revalidatePath } from 'next/cache'
 
-type Errors = Partial<Record<'imageFile', string>>
+type Errors = Partial<Record<'imageFile1' | 'imageFile2', string>>
 
 export default function RedbullSignupForm() {
     const router = useRouter()
-    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [imageFile1, setImageFile1] = useState<File | null>(null)
+    const [imageFile2, setImageFile2] = useState<File | null>(null)
     const [errors, setErrors] = useState<Errors>({})
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
 
-    const fileInputRef = useRef<HTMLInputElement>(null)
+    const fileInputRef1 = useRef<HTMLInputElement>(null)
+    const fileInputRef2 = useRef<HTMLInputElement>(null)
     const supabase = createClient()
 
     function validate(): boolean {
         const next: Errors = {}
 
-        if (!imageFile) {
-            next.imageFile = 'Please upload an image.'
+        if (!imageFile1) {
+            next.imageFile1 = 'Please upload the first image.'
+        }
+        if (!imageFile2) {
+            next.imageFile2 = 'Please upload the second image.'
         }
 
         setErrors(next)
@@ -46,27 +51,45 @@ export default function RedbullSignupForm() {
                 return;
             }
 
-            let image_url = null;
-            if (imageFile) {
+            let image_url_1 = null;
+            if (imageFile1) {
                 const { data, error } = await supabase.storage
                     .from('redbull-submissions')
-                    .upload(`${user.id}/${imageFile.name}`, imageFile, {
+                    .upload(`${user.id}/image1/${imageFile1.name}`, imageFile1, {
                         upsert: true,
                     });
 
                 if (error) {
-                    console.error('Error uploading file:', error);
+                    console.error('Error uploading file 1:', error);
                     return;
                 }
 
                 const { data: { publicUrl } } = supabase.storage.from('redbull-submissions').getPublicUrl(data.path);
-                image_url = publicUrl;
+                image_url_1 = publicUrl;
             }
 
-            if (image_url) {
+            let image_url_2 = null;
+            if (imageFile2) {
+                const { data, error } = await supabase.storage
+                    .from('redbull-submissions')
+                    .upload(`${user.id}/image2/${imageFile2.name}`, imageFile2, {
+                        upsert: true,
+                    });
+
+                if (error) {
+                    console.error('Error uploading file 2:', error);
+                    return;
+                }
+
+                const { data: { publicUrl } } = supabase.storage.from('redbull-submissions').getPublicUrl(data.path);
+                image_url_2 = publicUrl;
+            }
+
+            if (image_url_1 && image_url_2) {
                 const { error: submissionError } = await supabase.from('redbull_submissions').insert({
                     user_id: user.id,
-                    image_url: image_url,
+                    image_url: image_url_1,
+                    image_url_2: image_url_2,
                 });
 
                 if (submissionError) {
@@ -87,10 +110,10 @@ export default function RedbullSignupForm() {
             }
 
             setSubmitted(true)
-            
+
             // Revalidate the page to update the UI
             window.location.reload()
-            
+
             router.push('/dashboard');
         } finally {
             setSubmitting(false)
@@ -103,47 +126,92 @@ export default function RedbullSignupForm() {
                 <div className="space-y-3 rounded-md border bg-foreground p-4 min-w-[600px]">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-1">
-                            <Label>Submit Your Image</Label>
+                            <Label>Submit Your Images</Label>
                             <p className="text-xs text-muted-foreground">
-                                Upload your image for the Red Bull event.
+                                Upload your 2 images for the Red Bull event.
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <Label>Please open the RedBull Tetris Link. Proceed to sign up using your email address and select Gurgaon as your city. Upon successful registration, please take a screenshot of the confirmation page and attach it below. Once registered, you may begin playing Tetris for an opportunity to participate in a real-life Tetris event in Dubai.</Label>
                         <input
-                            ref={fileInputRef}
-                            id="image-upload"
+                            ref={fileInputRef1}
+                            id="image-upload-1"
                             type="file"
                             accept=".pdf,.png,.jpg,.jpeg"
                             className="hidden cursor-target"
                             onChange={(e) => {
                                 const f = e.target.files?.[0] ?? null
-                                setImageFile(f)
+                                setImageFile1(f)
                                 setSubmitted(false)
-                                if (errors.imageFile) {
-                                    setErrors((prev) => ({ ...prev, imageFile: undefined }))
+                                if (errors.imageFile1) {
+                                    setErrors((prev) => ({ ...prev, imageFile1: undefined }))
                                 }
                             }}
-                            aria-invalid={!!errors.imageFile}
-                            aria-describedby={errors.imageFile ? 'image-error' : undefined}
+                            aria-invalid={!!errors.imageFile1}
+                            aria-describedby={errors.imageFile1 ? 'image-error-1' : undefined}
                         />
                         <Button
                             type="button"
-                            onClick={() => fileInputRef.current?.click()}
-                            aria-controls="image-upload"
+                            onClick={() => fileInputRef1.current?.click()}
+                            aria-controls="image-upload-1"
                             className="cursor-target"
                         >
-                            Upload
+                            Upload Image 1
                         </Button>
                         <span className="text-sm text-muted-foreground truncate">
-                            {imageFile ? imageFile.name : 'No file selected'}
+                            {imageFile1 ? imageFile1.name : 'No file selected'}
                         </span>
                     </div>
 
-                    {errors.imageFile && (
-                        <p id="image-error" className="text-sm text-destructive">
-                            {errors.imageFile}
+                    {errors.imageFile1 && (
+                        <p id="image-error-1" className="text-sm text-destructive">
+                            {errors.imageFile1}
+                        </p>
+                    )}
+
+                    <div className="flex  gap-3 flex-col justify-start items-start">
+                        <Label>
+                            Submit the Screenshot of the score.
+                        </Label>
+                        <div className="flex items-center gap-3 ">
+                            <input
+                                ref={fileInputRef2}
+                                id="image-upload-2"
+                                type="file"
+                                accept=".pdf,.png,.jpg,.jpeg"
+                                className="hidden cursor-target"
+                                onChange={(e) => {
+                                    const f = e.target.files?.[0] ?? null
+                                    setImageFile2(f)
+                                    setSubmitted(false)
+                                    if (errors.imageFile2) {
+                                        setErrors((prev) => ({ ...prev, imageFile2: undefined }))
+                                    }
+                                }}
+                                aria-invalid={!!errors.imageFile2}
+                                aria-describedby={errors.imageFile2 ? 'image-error-2' : undefined}
+                            />
+                            <Button
+                                type="button"
+                                onClick={() => fileInputRef2.current?.click()}
+                                aria-controls="image-upload-2"
+                                className="cursor-target"
+                            >
+                                Upload Image 2
+                            </Button>
+                            <span className="text-sm text-muted-foreground truncate">
+                                {imageFile2 ? imageFile2.name : 'No file selected'}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {errors.imageFile2 && (
+                        <p id="image-error-2" className="text-sm text-destructive">
+                            {errors.imageFile2}
                         </p>
                     )}
                 </div>
