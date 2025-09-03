@@ -172,12 +172,14 @@ export default function DashboardPage() {
                                 </div>
 
                                 <div className="flex gap-2">
+                                    {!team.is_finalized && (
                                     <Button
                                         onClick={onLeave}
                                         className="w-full bg-transparent text-white border border-white hover:bg-white hover:text-black"
                                     >
                                         Leave Team
                                     </Button>
+                                    )}
                                     {user && team && user.id === team.owner_id && !team.is_finalized && (
                                         <Button
                                             className="w-full bg-red-600 text-white hover:bg-red-700"
@@ -186,8 +188,13 @@ export default function DashboardPage() {
                                                 if (error) {
                                                     toast.error(error.message)
                                                 } else {
-                                                    const { data: teamData } = await supabase.from("teams").select("*").eq("id", team.id).single()
-                                                    setTeam(teamData)
+                                                    toast.success("Team finalized!")
+                                                    const { data: teamsData } = await supabase.from("v_user_teams").select("*")
+                                                    if (teamsData && teamsData.length > 0) {
+                                                        setTeam(teamsData[0])
+                                                    } else {
+                                                        setTeam(null)
+                                                    }
                                                 }
                                             }}
                                             disabled={members.length < 1 || !allMembersSignedUp}
