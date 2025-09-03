@@ -37,7 +37,7 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
       <div className="mx-auto max-w-5xl text-center">
         {/* Date line accent color to red */}
         <p className="font-extrabold tracking-[0.2em] text-red-500 text-lg md:text-2xl uppercase">
-           <span className="cursor-target px-4">4 SEPT - 7 SEPT 2025</span>
+           <span className="cursor-target px-4">10 SEPT - 14 SEPT 2025</span>
         </p>
 
         <h1
