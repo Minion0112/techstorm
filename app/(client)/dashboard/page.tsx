@@ -148,6 +148,13 @@ export default function DashboardPage() {
                                             </Button>
                                         )}
                                     </div>
+                                    {team.is_finalized && (
+                                        <div className="mt-4 pt-4 border-t border-red-700/30">
+                                            <p className="text-base font-bold text-white/90">
+                                                Mentor: <span className="font-normal text-white/70">{team.mentor_name || "Not Assigned"}</span>
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="rounded-none border border-red-700/60 bg-black p-6  ">
