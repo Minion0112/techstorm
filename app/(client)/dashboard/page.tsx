@@ -100,7 +100,6 @@ export default function DashboardPage() {
         "repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)," +
         "repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)"
 
-    const allMembersSignedUp = members.length > 0 && members.every(member => member.is_signed_up_for_red_bull);
 
     return (
         <main className="min-h-dvh text-white relative"  >
@@ -204,8 +203,8 @@ export default function DashboardPage() {
                                                     }
                                                 }
                                             }}
-                                            disabled={members.length < 1 || !allMembersSignedUp}
-                                            title={members.length < 1 ? "Teams must have at least 1 member" : !allMembersSignedUp ? "All members must sign up for the Red Bull event" : "Finalize Team"}
+                                            disabled={members.length !== 5}
+                                            title={members.length !== 5 ? "Teams must have exactly 5 members" : "Finalize Team"}
                                         >
                                             Finalize Team
                                         </Button>
