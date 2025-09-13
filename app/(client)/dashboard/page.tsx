@@ -160,8 +160,8 @@ export default function DashboardPage() {
                     </div>
                 )}
 
-                {/* Forms Section - Team owners are redirected to owner dashboard for forms */}
-                {team && availableForms.length > 0 && (
+                {/* Forms Section - Only show forms to team owners */}
+                {team && user && user.id === team.owner_id && availableForms.length > 0 && (
                     <div className="space-y-6">
                         <span className="text-lg font-bold text-white">Submission Portal</span>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
