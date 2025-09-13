@@ -81,6 +81,13 @@ export default function FormSubmissionPage() {
         const userTeam = teamsData[0]
         setTeam(userTeam)
 
+        // Check if user is the team owner
+        if (user.id !== userTeam.owner_id) {
+          router.push("/dashboard")
+          toast.error("Access denied. Only team owners can access forms.")
+          return
+        }
+
         // Get form data and check if team can access it
         const { data: forms } = await supabase.rpc("get_available_forms", { 
           p_team_id: userTeam.id 
