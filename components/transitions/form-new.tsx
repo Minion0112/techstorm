@@ -30,6 +30,8 @@ export default function NewForm() {
     const [roomNo, setRoomNo] = useState<string>('')
     const [studentUndertakingFile, setStudentUndertakingFile] = useState<File | null>(null)
     const [parentUndertakingFile, setParentUndertakingFile] = useState<File | null>(null)
+    const [studentUndertakingUrl, setStudentUndertakingUrl] = useState<string>('')
+    const [parentUndertakingUrl, setParentUndertakingUrl] = useState<string>('')
     const [errors, setErrors] = useState<Errors>({})
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
@@ -39,14 +41,35 @@ export default function NewForm() {
     const supabase = createClient()
 
     useEffect(() => {
-        const getUser = async () => {
+        const getUserData = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
                 setEmail(user.email || '');
+
+                // Fetch existing profile data
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile && !error) {
+                    // Pre-populate form with existing data
+                    setName(profile.display_name || '');
+                    setHandle(profile.handle || '');
+                    setMobile(profile.mobile || '');
+                    setGender(profile.gender || '');
+                    setRegistration(profile.registration_number || '');
+                    setIsHosteler(profile.is_hosteler || false);
+                    setHostelName(profile.hostel_name || '');
+                    setRoomNo(profile.room_no || '');
+                    setStudentUndertakingUrl(profile.undertaking_url || '');
+                    setParentUndertakingUrl(profile.parent_undertaking_url || '');
+                }
             }
         };
-        getUser();
-    }, [supabase.auth]);
+        getUserData();
+    }, [supabase]);
 
     const hostelOptions = useMemo(() => ['Ratan Tata Hostel', 'Kalpana Chawla Hostel', 'APJ Abdul Kalam Hostel'], [])
 
@@ -85,10 +108,10 @@ export default function NewForm() {
                 next.roomNo = 'Enter your room number.'
             }
         } else {
-            if (!studentUndertakingFile) {
+            if (!studentUndertakingFile && !studentUndertakingUrl) {
                 next.studentUndertakingFile = 'Please upload a signed student undertaking.'
             }
-            if (!parentUndertakingFile) {
+            if (!parentUndertakingFile && !parentUndertakingUrl) {
                 next.parentUndertakingFile = 'Please upload a signed parent undertaking.'
             }
         }
@@ -112,7 +135,7 @@ export default function NewForm() {
                 return;
             }
 
-            let student_undertaking_url = null;
+            let student_undertaking_url = studentUndertakingUrl;
             if (studentUndertakingFile) {
                 const { data, error } = await supabase.storage
                     .from('undertakings')
@@ -131,7 +154,7 @@ export default function NewForm() {
                 student_undertaking_url = publicUrl;
             }
 
-            let parent_undertaking_url = null;
+            let parent_undertaking_url = parentUndertakingUrl;
             if (parentUndertakingFile) {
                 const { data, error } = await supabase.storage
                     .from('undertakings')
@@ -412,7 +435,8 @@ export default function NewForm() {
                                     Upload
                                 </Button>
                                 <span className="text-sm text-muted-foreground truncate">
-                                    {studentUndertakingFile ? studentUndertakingFile.name : 'No file selected'}
+                                    {studentUndertakingFile ? studentUndertakingFile.name :
+                                     studentUndertakingUrl ? 'File already uploaded' : 'No file selected'}
                                 </span>
                             </div>
 
@@ -465,7 +489,8 @@ export default function NewForm() {
                                     Upload
                                 </Button>
                                 <span className="text-sm text-muted-foreground truncate">
-                                    {parentUndertakingFile ? parentUndertakingFile.name : 'No file selected'}
+                                    {parentUndertakingFile ? parentUndertakingFile.name :
+                                     parentUndertakingUrl ? 'File already uploaded' : 'No file selected'}
                                 </span>
                             </div>
 
