@@ -148,10 +148,15 @@ export default function DashboardPage() {
                                         )}
                                     </div>
                                     {team.is_finalized && (
-                                        <div className="mt-4 pt-4 border-t border-red-700/30">
+                                        <div className="mt-4 pt-4 border-t border-red-700/30 space-y-2">
                                             <p className="text-base font-bold text-white/90">
                                                 Mentor: <span className="font-normal text-white/70">{team.mentor_name || "Not Assigned"}</span>
                                             </p>
+                                            {team.room_name && (
+                                                <p className="text-base font-bold text-white/90">
+                                                    Room: <span className="font-normal text-white/70">{team.room_name}</span>
+                                                </p>
+                                            )}
                                         </div>
                                     )}
                                 </div>
