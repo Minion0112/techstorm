@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import { useOnboardingStatus } from '@/hooks/use-onboarding-status'
 
 type Errors = Partial<
     Record<'name' | 'mobile' | 'email' | 'registration' | 'hostelName' | 'roomNo' | 'studentUndertakingFile' | 'parentUndertakingFile' | 'handle' | 'gender', string>
@@ -17,6 +18,7 @@ type Errors = Partial<
 
 export default function NewForm() {
     const router = useRouter()
+    const { refreshStatus } = useOnboardingStatus()
     const [name, setName] = useState('')
     const [handle, setHandle] = useState('')
     const [mobile, setMobile] = useState('')
@@ -172,6 +174,8 @@ export default function NewForm() {
             }
 
             setSubmitted(true)
+            // Refresh onboarding status after successful submission
+            refreshStatus()
             router.refresh()
             router.push('/dashboard');
         } finally {

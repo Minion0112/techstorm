@@ -5,6 +5,10 @@ import PixelBlast from "@/components/transitions/back"
 import TargetCursor from "@/components/transitions/target-cursor"
 import { Toaster } from "@/components/ui/sonner"
 import { createClient } from "@/utils/supabase/client"
+import { QuickOnboardingStatus } from "@/components/onboarding/onboarding-status"
+import { useOnboardingStatus } from "@/hooks/use-onboarding-status"
+import { AlertTriangle } from "lucide-react"
+import Link from "next/link"
 
 export default function DashboardLayout({
     children,
@@ -13,6 +17,7 @@ export default function DashboardLayout({
 }) {
     const [isMobile, setIsMobile] = useState(false)
     const [showRedbullWarning, setShowRedbullWarning] = useState(false)
+    const { isComplete, isDayScholar, isHosteler, loading: statusLoading } = useOnboardingStatus()
 
     useEffect(() => {
         const checkMobile = () => {
@@ -69,6 +74,31 @@ export default function DashboardLayout({
                     spinDuration={4}
                     hideDefaultCursor={true}
                 />
+            )}
+
+            {/* Onboarding Status Warning */}
+            {!statusLoading && !isComplete && (
+                <div className="fixed top-4 left-4 right-4 z-50 pointer-events-none">
+                    <div className="bg-yellow-600/90 backdrop-blur-sm border border-yellow-500/50 rounded-lg p-3 pointer-events-auto">
+                        <div className="flex items-center gap-3">
+                            <AlertTriangle className="h-4 w-4 text-yellow-200 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm text-yellow-100 font-medium">
+                                    Profile incomplete - {isDayScholar ? 'Day Scholar' : isHosteler ? 'Hosteler' : 'Student'} requirements not met
+                                </p>
+                                <p className="text-xs text-yellow-200/80">
+                                    Complete your profile to access all features
+                                </p>
+                            </div>
+                            <Link 
+                                href="/onboarding"
+                                className="text-xs bg-yellow-500 hover:bg-yellow-400 text-yellow-900 px-3 py-1 rounded font-medium transition-colors"
+                            >
+                                Complete Now
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             )}
 
             <main>{children}</main>

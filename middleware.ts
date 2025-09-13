@@ -12,13 +12,24 @@ export async function middleware(request: NextRequest) {
 
   // If the user is logged in
   if (session) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('handle')
-      .eq('id', session.user.id)
-      .single();
+    // Check comprehensive onboarding status using our custom function
+    const { data: onboardingStatus, error } = await supabase
+      .rpc('get_user_onboarding_status', { user_uuid: session.user.id });
 
-    const profileIncomplete = !profile || !profile.handle;
+    // Fall back to basic handle check if function fails
+    let profileIncomplete = true;
+    
+    if (error) {
+      console.error('Error checking onboarding status, falling back to handle check:', error);
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('handle')
+        .eq('id', session.user.id)
+        .single();
+      profileIncomplete = !profile || !profile.handle;
+    } else if (onboardingStatus && onboardingStatus.length > 0) {
+      profileIncomplete = !onboardingStatus[0].is_complete;
+    }
 
     // If profile is incomplete, and user is not on onboarding page, redirect to onboarding
     if (profileIncomplete && pathname !== '/onboarding') {
