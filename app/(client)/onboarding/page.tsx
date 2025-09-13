@@ -1,7 +1,6 @@
 'use client'
 
 import NewForm from '@/components/transitions/form-new'
-import { DetailedOnboardingStatus } from '@/components/onboarding/onboarding-status'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -55,14 +54,10 @@ export default function OnboardingPage() {
               Complete all required information to access your dashboard and join teams.
             </p>
           </div>
-          <div className="w-full max-w-md">
-            <DetailedOnboardingStatus />
-          </div>
         </div>
         <div className="flex flex-col p-6 md:p-12 bg-black">
           <div className="lg:hidden mb-6">
             <h1 className="text-2xl font-bold mb-4">Complete your Profile</h1>
-            <DetailedOnboardingStatus className="mb-4" />
           </div>
           <div className="flex-1 flex items-center justify-center">
             <NewForm />
