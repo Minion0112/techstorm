@@ -94,16 +94,25 @@ export async function isDayScholarOnboardingComplete(userId: string): Promise<bo
  */
 export async function getOnboardingRedirect(userId: string, currentPath: string): Promise<string | null> {
   const status = await checkUserOnboardingStatus(userId)
-  
+
+  // Skip onboarding for hostelers - they don't need to complete the onboarding process
+  if (status.isHosteler) {
+    // If hosteler is on onboarding page, redirect to dashboard
+    if (currentPath === '/onboarding') {
+      return '/dashboard'
+    }
+    return null
+  }
+
   // If profile is incomplete and not on onboarding page, redirect to onboarding
   if (!status.isComplete && currentPath !== '/onboarding') {
     return '/onboarding'
   }
-  
+
   // If profile is complete and on onboarding page, redirect to dashboard
   if (status.isComplete && currentPath === '/onboarding') {
     return '/dashboard'
   }
-  
+
   return null
 }

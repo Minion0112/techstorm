@@ -18,17 +18,25 @@ export async function middleware(request: NextRequest) {
 
     // Fall back to basic handle check if function fails
     let profileIncomplete = true;
-    
+    let isHosteler = false;
+
     if (error) {
       console.error('Error checking onboarding status, falling back to handle check:', error);
       const { data: profile } = await supabase
         .from('profiles')
-        .select('handle')
+        .select('handle, is_hosteler')
         .eq('id', session.user.id)
         .single();
       profileIncomplete = !profile || !profile.handle;
+      isHosteler = profile?.is_hosteler === true;
     } else if (onboardingStatus && onboardingStatus.length > 0) {
       profileIncomplete = !onboardingStatus[0].is_complete;
+      isHosteler = onboardingStatus[0].is_hosteler === true;
+    }
+
+    // Skip onboarding for hostelers - they don't need to complete the onboarding process
+    if (isHosteler) {
+      profileIncomplete = false;
     }
 
     // If profile is incomplete, and user is not on onboarding page, redirect to onboarding

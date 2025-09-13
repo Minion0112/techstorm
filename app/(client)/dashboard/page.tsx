@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { createClient } from "@/utils/supabase/client"
+import ThemedHeader from "@/components/ui/themed-header"
 import FuzzyText from "@/components/transitions/glitch"
 import ElectricBorder from "@/components/transitions/electric-grid"
 import ProfileCard from "@/components/transitions/profile"
@@ -22,6 +23,7 @@ export default function DashboardPage() {
     const [members, setMembers] = useState<any[]>([])
     const [showCreate, setShowCreate] = useState(true)
     const [user, setUser] = useState<any>(null)
+    const [availableForms, setAvailableForms] = useState<any[]>([])
     const supabase = createClient()
 
     const blackAndWhiteBehindGradient = 'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(0,80%,70%,var(--card-opacity)) 4%,hsla(0,60%,50%,calc(var(--card-opacity)*0.75)) 10%,hsla(0,40%,30%,calc(var(--card-opacity)*0.5)) 50%,hsla(0,0%,0%,0) 100%)';
@@ -36,7 +38,15 @@ export default function DashboardPage() {
 
                 const { data: teamsData } = await supabase.from("v_user_teams").select("*")
                 if (teamsData && teamsData.length > 0) {
-                    setTeam(teamsData[0])
+                    const userTeam = teamsData[0]
+                    setTeam(userTeam)
+
+                    // Auto-redirect team owners to their owner dashboard
+                    if (userTeam.owner_id === user.id) {
+                        console.log("Team owner detected, redirecting to owner dashboard")
+                        router.replace("/dashboard/owner")
+                        return
+                    }
                 } else {
                     setTeam(null)
                     setMembers([])
@@ -44,7 +54,7 @@ export default function DashboardPage() {
             }
         }
         getData()
-    }, [supabase])
+    }, [supabase, router])
 
     useEffect(() => {
         const getMembers = async () => {
@@ -54,6 +64,22 @@ export default function DashboardPage() {
             }
         }
         getMembers()
+    }, [team, supabase])
+
+    // Fetch available forms for the team
+    useEffect(() => {
+        const fetchForms = async () => {
+            if (team) {
+                try {
+                    const { data: forms } = await supabase.rpc("get_available_forms", { p_team_id: team.id })
+                    setAvailableForms(forms || [])
+                } catch (error) {
+                    console.error("Error fetching forms:", error)
+                }
+            }
+        }
+
+        fetchForms()
     }, [team, supabase])
 
     async function onCreate(e: React.FormEvent<HTMLFormElement>) {
@@ -102,28 +128,103 @@ export default function DashboardPage() {
 
 
     return (
-        <main className="min-h-dvh text-white relative"  >
+        <main className="min-h-dvh bg-black text-white relative">
             {/* grid background */}
-            <div aria-hidden className="pointer-events-none absolute inset-0" />
+            <div 
+                aria-hidden 
+                className="pointer-events-none absolute inset-0"
+                style={{
+                    backgroundImage: `
+                        repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px),
+                        repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)
+                    `
+                }}
+            />
             <div className="relative z-10 mx-auto max-w-6xl px-6 py-10 space-y-10">
-                <header className="flex items-center justify-between">
-                    <h1 className="text-balance">
-                        {`Welcome${profile?.display_name ? `, ${profile.display_name}` : ""}`}
-                        <span className="block text-sm text-white/60 mt-1">{profile?.handle ? `@${profile.handle}` : ""}</span>
-                    </h1>
-                    <Button
-                        className="bg-black text-white border border-white hover:bg-white hover:text-black cursor-target"
-                        onClick={async () => {
-                            await supabase.auth.signOut()
-                            router.push("/")
-                        }}
-                    >
-                        Sign out
-                    </Button>
-                </header>
+                <ThemedHeader 
+                    title="DASHBOARD"
+                    subtitle="Team Management System"
+                    profile={profile}
+                    user={user}
+                />
 
-                {/* hero headline */}
-                
+                {/* Navigation for team members (owners are auto-redirected) */}
+                {team && (
+                    <div className="flex gap-4 flex-wrap">
+                        <Button
+                            onClick={() => router.push("/dashboard/team")}
+                            className="bg-red-600 text-white hover:bg-red-700 font-mono"
+                        >
+                            VIEW TEAM DETAILS
+                        </Button>
+                    </div>
+                )}
+
+                {/* Forms Section - Team owners are redirected to owner dashboard for forms */}
+                {team && availableForms.length > 0 && (
+                    <div className="space-y-6">
+                        <span className="text-lg font-bold text-white">Submission Portal</span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {availableForms.map((form) => (
+                                <ElectricBorder key={form.id} color="#ef4444" className="h-fit">
+                                    <div className="bg-black border border-red-700/60 p-6 space-y-4">
+                                        <div className="space-y-2">
+                                            <h3 className="text-lg font-bold text-white">{form.title}</h3>
+                                            <p className="text-white/70 text-sm">{form.description}</p>
+                                        </div>
+                                        
+                                        <div className="flex items-center gap-2 text-xs">
+                                            <span className={`px-2 py-1 rounded-full border ${
+                                                form.is_locked 
+                                                    ? 'border-red-500 text-red-400 bg-red-500/10' 
+                                                    : 'border-green-500 text-green-400 bg-green-500/10'
+                                            }`}>
+                                                {form.is_locked ? 'LOCKED' : 'UNLOCKED'}
+                                            </span>
+                                            
+                                            {form.has_submission && (
+                                                <span className="px-2 py-1 rounded-full border border-blue-500 text-blue-400 bg-blue-500/10">
+                                                    SUBMITTED
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {form.has_submission && form.submitted_at && (
+                                            <p className="text-white/50 text-xs">
+                                                Submitted: {new Date(form.submitted_at).toLocaleString()}
+                                            </p>
+                                        )}
+
+                                        <Button
+                                            onClick={() => {
+                                                if (!form.is_locked) {
+                                                    router.push(`/dashboard/forms/${form.id}`)
+                                                } else {
+                                                    toast.error("Form is currently locked")
+                                                }
+                                            }}
+                                            disabled={form.is_locked}
+                                            className={`w-full font-mono ${
+                                                form.has_submission 
+                                                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                                                    : form.is_locked 
+                                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+                                                        : 'bg-green-600 text-white hover:bg-green-700'
+                                            }`}
+                                        >
+                      {form.has_submission
+                        ? 'VIEW/EDIT SUBMISSION'
+                        : form.is_locked
+                          ? 'LOCKED'
+                          : 'SUBMIT FORM'
+                      }
+                                        </Button>
+                                    </div>
+                                </ElectricBorder>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* left side */}
