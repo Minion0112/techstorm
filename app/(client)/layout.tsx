@@ -17,6 +17,7 @@ export default function DashboardLayout({
 }) {
     const [isMobile, setIsMobile] = useState(false)
     const [showRedbullWarning, setShowRedbullWarning] = useState(false)
+    const [user, setUser] = useState<any>(null)
     const { isComplete, isDayScholar, isHosteler, loading: statusLoading } = useOnboardingStatus()
 
     useEffect(() => {
@@ -31,10 +32,18 @@ export default function DashboardLayout({
     }, [])
 
     useEffect(() => {
-        const checkRedbullSignup = async () => {
+        const checkUser = async () => {
             const supabase = createClient()
             const { data: { user } } = await supabase.auth.getUser()
+            setUser(user)
+        }
+        checkUser()
+    }, [])
+
+    useEffect(() => {
+        const checkRedbullSignup = async () => {
             if (user) {
+                const supabase = createClient()
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('is_signed_up_for_red_bull')
@@ -47,7 +56,7 @@ export default function DashboardLayout({
             }
         }
         checkRedbullSignup()
-    }, [])
+    }, [user])
 
     return (
         <>
@@ -77,7 +86,7 @@ export default function DashboardLayout({
             )}
 
             {/* Onboarding Status Warning */}
-            {!statusLoading && !isComplete && (
+            {user && !statusLoading && !isComplete && (
                 <div className="fixed top-4 left-4 right-4 z-50 pointer-events-none">
                     <div className="bg-yellow-600/90 backdrop-blur-sm border border-yellow-500/50 rounded-lg p-3 pointer-events-auto">
                         <div className="flex items-center gap-3">
@@ -90,7 +99,7 @@ export default function DashboardLayout({
                                     Complete your profile to access all features
                                 </p>
                             </div>
-                            <Link 
+                            <Link
                                 href="/onboarding"
                                 className="text-xs bg-yellow-500 hover:bg-yellow-400 text-yellow-900 px-3 py-1 rounded font-medium transition-colors"
                             >
