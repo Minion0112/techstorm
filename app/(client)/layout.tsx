@@ -5,7 +5,7 @@ import PixelBlast from "@/components/transitions/back"
 import TargetCursor from "@/components/transitions/target-cursor"
 import { Toaster } from "@/components/ui/sonner"
 import { createClient } from "@/utils/supabase/client"
-import { QuickOnboardingStatus } from "@/components/onboarding/onboarding-status"
+
 import { useOnboardingStatus } from "@/hooks/use-onboarding-status"
 import { AlertTriangle } from "lucide-react"
 import Link from "next/link"
