@@ -9,6 +9,15 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/(.*)',
+        destination: 'https://gamestorm.clusterider.tech',
+        permanent: false,
+      },
+    ]
+  },
 }
 
 export default nextConfig
