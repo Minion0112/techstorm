@@ -43,6 +43,7 @@
     "@react-three/rapier": "^2.1.0",
     "@remix-run/react": "latest",
     "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.112.3",
     "@sveltejs/kit": "latest",
     "@types/three": "^0.179.0",
     "@vercel/analytics": "latest",
@@ -90,5 +91,8 @@
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "sharp@0.33.5": true
   }
 }
