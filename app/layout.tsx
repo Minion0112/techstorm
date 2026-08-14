@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import RouteWave from "@/components/transitions/route-wave"
 import { MatrixLoaderOverlay } from "@/components/transitions/matrix-loader-overlay"
+import { SessionProvider } from "@/app/components/session-provider"
 import "./globals.css"
 import PixelBlast from "@/components/transitions/back"
 
@@ -12,8 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="light antialiased">
       <body className={`bg-black text-white font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        
-        <Suspense fallback={null}>{children}</Suspense>
+        <SessionProvider>
+          <Suspense fallback={null}>{children}</Suspense>
+        </SessionProvider>
         <MatrixLoaderOverlay />
         <RouteWave trigger="from-onboarding" durationMs={900} />
         <Analytics />

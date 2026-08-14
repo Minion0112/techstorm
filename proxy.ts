@@ -2,15 +2,15 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@/utils/supabase/middleware';
 
 /**
- * Minimal middleware for Next.js 16
- * Delegates session checking to /api/auth/session proxy
- * Only handles cookie refresh and basic static file routing
+ * Proxy function for Next.js 16
+ * Handles authentication cookie refresh and delegates routing to /api/auth/session proxy API
+ * This replaces the deprecated middleware.ts pattern
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { response } = createClient(request);
 
-  // Let the proxy API handle the routing logic
-  // Middleware only refreshes auth session cookies
+  // Proxy only refreshes auth session cookies
+  // All routing logic is delegated to the client-side SessionProvider + /api/auth/session API
   return response;
 }
 
@@ -21,9 +21,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - api routes (handled by proxy)
+     * - api/ (handled by route handlers)
      * - anything with a dot (static files)
      */
-    '/((?!_next/static|_next/image|favicon.ico|api/|.*\..*).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api/|.*\\..*?).*)',
   ],
 };
