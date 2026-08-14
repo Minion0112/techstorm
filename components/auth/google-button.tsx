@@ -7,13 +7,16 @@ import { createClient } from '@/utils/supabase/client'
 export function GoogleSignInButton() {
   const handleGoogleLogin = async () => {
     const supabase = createClient()
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin
+    const callbackUrl = `${siteUrl.replace(/\/$/, '')}/auth/callback`
+
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        queryParams:{
-          hd: 'bmu.edu.in'
+        queryParams: {
+          hd: 'bmu.edu.in',
         },
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo: callbackUrl,
       },
     })
   }
