@@ -384,10 +384,9 @@ export default function DashboardPage() {
                                         <h4 className="text-lg font-extrabold tracking-tight">
                                             <span className="pb-4">Participation Guidelines</span>
                                         </h4>
-                                        <ul className="mt-3 list-disc pl-5 space-y-2 text-sm text-white/90">
+                                        <ul className="mt-3 list-disc pl-6 space-y-2 text-sm text-white/90">
                                             <li>Open to first-year students only.</li>
                                             <li>Each team must consist of 5 members.</li>
-
                                             <li>Teams must include at least one female participant.</li>
                                             <li>Interdisciplinary teams are encouraged.</li>
                                             <li>We advise you to include a maximum of 2 female members. Failure to do so may result in reshuffling</li>
