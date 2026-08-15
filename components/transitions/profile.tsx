@@ -322,7 +322,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                                     style={{ 
                                         pointerEvents: 'auto',
                                         borderRadius: '0px',
-                                        border: '2px solid #ff0000'
+                                        border: '2px solid #bf00ff'
                                     }}
                                     type="button"
                                     aria-label={`Contact ${name || 'user'}`}

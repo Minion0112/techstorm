@@ -323,7 +323,7 @@ export default function NewForm() {
                 </div>
 
                 {/* Hosteler Toggle */}
-                <div className="flex items-center justify-between rounded-md border bg-foreground px-4 py-3">
+                <div className="space-y-3 rounded-md border border-border bg-secondary-background p-4 text-foreground">
                     <div className="space-y-0.5">
                         <Label htmlFor="hosteler">Are you a hosteler?</Label>
                         <p className="text-xs text-muted-foreground">Toggle on if you reside in a hostel.</p>
@@ -393,7 +393,7 @@ export default function NewForm() {
                 {/* Conditional: Non-hosteler undertaking */}
                 {!isHosteler && (
                     <>
-                        <div className="space-y-3 rounded-md border bg-foreground p-4">
+                        <div className="space-y-3 rounded-md border border-border bg-secondary-background p-4 text-foreground">
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="space-y-1">
                                     <Label>Student Undertaking</Label>
@@ -402,7 +402,7 @@ export default function NewForm() {
                                     </p>
                                 </div>
                                 <Button asChild className="cursor-target px-4 py-2">
-                                    <a href="https://supa.t-bash.space/storage/v1/object/public/newbro//student%20undertaking.docx" download="undertaking-form.docx">
+                                    <a href="https://ztvqvepnzbjsnxmeetbl.supabase.co/storage/v1/object/public/undertaking/Hosteller%20Undertaking%20for%20Day%20Scholars%20to%20stay%20on%20campus%20-%20Techstorm%203.0.docx">
                                         Download Template
                                     </a>
                                 </Button>
@@ -447,7 +447,7 @@ export default function NewForm() {
                             )}
                         </div>
 
-                        <div className="space-y-3 rounded-md border bg-foreground p-4">
+                        <div className="space-y-3 rounded-md border border-border bg-secondary-background p-4 text-foreground">
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="space-y-1">
                                     <Label>Parent Undertaking</Label>
@@ -456,7 +456,7 @@ export default function NewForm() {
                                     </p>
                                 </div>
                                 <Button asChild className="cursor-target px-4 py-2">
-                                    <a href="https://supa.t-bash.space/storage/v1/object/public/newbro//parent%20undertaking.docx" download="undertaking-form.docx">
+                                    <a href="https://ztvqvepnzbjsnxmeetbl.supabase.co/storage/v1/object/public/undertaking/Parent%20Undertaking%20for%20Day%20Scholars%20to%20stay%20on%20campus%20-%20Techstorm%203.0.docx">
                                         Download Template
                                     </a>
                                 </Button>
