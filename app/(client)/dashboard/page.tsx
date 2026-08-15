@@ -166,8 +166,8 @@ export default function DashboardPage() {
                         <span className="text-lg font-bold text-white">Submission Portal</span>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {availableForms.map((form) => (
-                                <ElectricBorder key={form.id} color="#ef4444" className="h-fit">
-                                    <div className="bg-black border border-purple-700/60 p-6 space-y-4">
+                                <ElectricBorder key={form.id} color="#a855f7" className="h-fit">
+                    <div className="bg-black border border-purple-700/60 p-6 space-y-4">
                                         <div className="space-y-2">
                                             <h3 className="text-lg font-bold text-white">{form.title}</h3>
                                             <p className="text-white/70 text-sm">{form.description}</p>
@@ -387,8 +387,10 @@ export default function DashboardPage() {
                                         <ul className="mt-3 list-disc pl-5 space-y-2 text-sm text-white/90">
                                             <li>Open to first-year students only.</li>
                                             <li>Each team must consist of 5 members.</li>
+
                                             <li>Teams must include at least one female participant.</li>
                                             <li>Interdisciplinary teams are encouraged.</li>
+                                            <li>We advise you to include a maximum of 2 female members. Failure to do so may result in reshuffling</li>
                                         </ul>
                                     </div>
                                 </div>
