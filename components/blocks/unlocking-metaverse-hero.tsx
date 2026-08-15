@@ -29,15 +29,15 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
       aria-labelledby="unlocking-metaverse-heading"
     >
       {/* <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <span className="absolute left-1/2 top-10 -translate-x-[60%] h-64 w-64 rounded-full bg-red-600/30 blur-2xl" />
-        <span className="absolute left-1/2 top-32 -translate-x-[10%] h-56 w-56 rounded-full bg-red-500/30 blur-2xl" />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[40rem] rounded-full ring-1 ring-red-500/25 opacity-30" />
+        <span className="absolute left-1/2 top-10 -translate-x-[60%] h-64 w-64 rounded-full bg-purple-600/30 blur-2xl" />
+        <span className="absolute left-1/2 top-32 -translate-x-[10%] h-56 w-56 rounded-full bg-purple-500/30 blur-2xl" />
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[40rem] rounded-full ring-1 ring-purple-500/25 opacity-30" />
       </div> */}
 
       <div className="mx-auto max-w-5xl text-center">
         {/* Date line accent color to red */}
-        <p className="font-extrabold tracking-[0.2em] text-red-500 text-lg md:text-2xl uppercase">
-           <span className="cursor-target px-4">10 SEPT - 14 SEPT 2025</span>
+        <p className="font-extrabold tracking-[0.2em] text-purple-500 text-lg md:text-2xl uppercase">
+           <span className="cursor-target px-4">22 AUG - 23 AUG 2026</span>
         </p>
 
         <h1
@@ -49,7 +49,7 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
             {/* Magenta offset layer to red */}
             <span
               aria-hidden="true"
-              className="absolute inset-0 translate-y-[0.12em] text-red-600 blur-[0.5px] md:blur-[1px]"
+              className="absolute inset-0 translate-y-[0.12em] text-purple-600 blur-[0.5px] md:blur-[1px]"
             >
               KICKSTART YOUR JOURNEY IN TECH WHERE ONE BATCH LEADS ANOTHER
             </span>
@@ -60,7 +60,7 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
         </h1>
 
         {/* CTA */}
-        <div className="mt-10 flex justify-center">
+        {/* <div className="mt-10 flex justify-center">
           {onLearnMore ? (
             <button type="button" onClick={onLearnMore} className={buttonClasses()}>
               LEARN MORE
@@ -70,7 +70,7 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
               LEARN MORE
             </a>
           )}
-        </div>
+        </div> */}
       </div>
     </section>
   )
@@ -85,6 +85,6 @@ function buttonClasses() {
     // Simple motion and a faux depth shadow
     "shadow-[0_12px_0_#000] hover:-translate-y-px active:translate-y-[2px] transition",
     // Accessible focus
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 focus-visible:ring-offset-black",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500 focus-visible:ring-offset-black",
   )
 }

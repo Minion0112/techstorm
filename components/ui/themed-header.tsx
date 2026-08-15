@@ -34,12 +34,12 @@ export default function ThemedHeader({
 
   return (
     <ElectricBorder 
-      color="#ef4444" 
+      color="#a855f7" 
       className={`mb-8 ${className}`}
       speed={0.5}
       chaos={0.8}
     >
-      <header className="bg-black border border-red-700/60 p-6">
+      <header className="bg-black border border-purple-700/60 p-6">
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2">
               {title}
@@ -52,7 +52,7 @@ export default function ThemedHeader({
               <div className="text-white/60 text-sm font-mono">
                 <span>Welcome{profile?.display_name ? `, ${profile.display_name}` : ""}</span>
                 {profile?.handle && (
-                  <span className="block mt-1 text-red-400">@{profile.handle}</span>
+                  <span className="block mt-1 text-purple-400">@{profile.handle}</span>
                 )}
               </div>
             )}
@@ -61,7 +61,7 @@ export default function ThemedHeader({
           <div className="flex items-center gap-4">
             {showSignOut && (
               <Button
-                className="bg-black text-white border border-red-500 hover:bg-red-500 hover:text-white cursor-target font-mono transition-all duration-300"
+                className="bg-black text-white border border-purple-500 hover:bg-purple-500 hover:text-white cursor-target font-mono transition-all duration-300"
                 onClick={handleSignOut}
               >
                 SIGN OUT
@@ -75,8 +75,8 @@ export default function ThemedHeader({
           className="absolute inset-0 pointer-events-none opacity-10"
           style={{
             backgroundImage: `
-              repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.3) 24px),
-              repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.3) 24px)
+              repeating-linear-gradient(0deg, transparent 0 23px, rgba(168,85,247,0.3) 24px),
+              repeating-linear-gradient(90deg, transparent 0 23px, rgba(168,85,247,0.3) 24px)
             `
           }}
         />

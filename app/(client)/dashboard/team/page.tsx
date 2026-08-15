@@ -104,8 +104,8 @@ export default function TeamDetailsPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage: `
-            repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px),
-            repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)
+            repeating-linear-gradient(0deg, transparent 0 23px, rgba(168,85,247,0.1) 24px),
+            repeating-linear-gradient(90deg, transparent 0 23px, rgba(168,85,247,0.1) 24px)
           `
         }}
       />
@@ -129,7 +129,7 @@ export default function TeamDetailsPage() {
           {isOwner && (
             <Button
               onClick={() => router.push("/dashboard/owner")}
-              className="bg-red-600 text-white hover:bg-red-700 font-mono"
+              className="bg-purple-600 text-white hover:bg-purple-700 font-mono"
             >
               OWNER DASHBOARD
             </Button>
@@ -139,8 +139,8 @@ export default function TeamDetailsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Team Information */}
           <div className="space-y-8">
-            <ElectricBorder color="#ef4444">
-              <div className="bg-black border border-red-700/60 p-6">
+            <ElectricBorder color="#a855f7">
+              <div className="bg-black border border-purple-700/60 p-6">
                 <h3 className="text-xl mb-4 font-extrabold flex flex-col gap-2">
                   <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>
                     Team: {team.name}
@@ -163,7 +163,7 @@ export default function TeamDetailsPage() {
                   )}
                 </div>
                 {team.is_finalized && (
-                  <div className="mt-4 pt-4 border-t border-red-700/30 space-y-2">
+                  <div className="mt-4 pt-4 border-t border-purple-700/30 space-y-2">
                     <p className="text-base font-bold text-white/90">
                       Mentor: <span className="font-normal text-white/70">{team.mentor_name || "Not Assigned"}</span>
                     </p>
@@ -178,8 +178,8 @@ export default function TeamDetailsPage() {
             </ElectricBorder>
 
             {/* Team Members */}
-            <ElectricBorder color="#ef4444">
-              <div className="bg-black border border-red-700/60 p-6">
+            <ElectricBorder color="#a855f7">
+              <div className="bg-black border border-purple-700/60 p-6">
                 <h3 className="text-xl mb-4 font-extrabold flex flex-col gap-2">
                   <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>
                     Team Members ({members.length}/5)
@@ -194,7 +194,7 @@ export default function TeamDetailsPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`text-xs px-2 py-1 border rounded-full ${
-                          member.role === 'owner' ? 'border-red-500 text-red-400' : 'border-white text-white'
+                          member.role === 'owner' ? 'border-purple-500 text-purple-400' : 'border-white text-white'
                         }`}>
                           {member.role}
                         </span>
@@ -220,7 +220,7 @@ export default function TeamDetailsPage() {
               )}
               {isOwner && !team.is_finalized && (
                 <Button
-                  className="flex-1 bg-red-600 text-white hover:bg-red-700"
+                  className="flex-1 bg-purple-600 text-white hover:bg-purple-700"
                   onClick={async () => {
                     const { error } = await supabase.rpc("finalize_team", { p_team_id: team.id })
                     if (error) {

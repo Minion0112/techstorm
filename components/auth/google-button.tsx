@@ -26,7 +26,7 @@ export function GoogleSignInButton() {
         onClick={handleGoogleLogin}
         id="prizes-heading"
         className="text-balance font-heading text-5xl md:text-7xl  tracking-tight hover:scale-[1.05] transition duration-300 ease-in-out cursor-pointer cursor-target"
-        style={{ textShadow: "2px 2px 0 #000000, 4px 4px 0 #dc2626" }}
+        style={{ textShadow: "2px 2px 0 #000000, 4px 4px 0 #9333ea" }}
       >
         Register Now / Login
       </button>

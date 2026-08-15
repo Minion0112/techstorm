@@ -4,38 +4,64 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(93.3% 0.0339 17.77);
-  --secondary-background: oklch(100% 0 0);
-  --foreground: oklch(0% 0 0);
-  --main-foreground: oklch(0% 0 0);
-  --main: oklch(67.28% 0.2147 24.22);
-  --border: oklch(0% 0 0);
-  --ring: oklch(0% 0 0);
-  --overlay: oklch(0% 0 0 / 0.8);
+  /* ─────────────────────────────────────────
+     TECHSTORM 3.0 — CORE COLOR SYSTEM
+     Black / White / Electric Purple
+     ───────────────────────────────────────── */
+
+  --background: oklch(5.5% 0.008 285);
+  --secondary-background: oklch(9% 0.012 285);
+
+  --foreground: oklch(96% 0.005 285);
+  --main-foreground: oklch(98% 0 0);
+
+  /* TechStorm purple */
+  --main: oklch(65% 0.28 305);
+
+  /* Subtle dark border instead of old black borders */
+  --border: oklch(23% 0.035 295);
+
+  --ring: oklch(65% 0.28 305);
+
+  --overlay: oklch(0% 0 0 / 0.82);
+
+  /* Keep the site's sharp offset-shadow language */
   --shadow: 4px 4px 0px 0px var(--border);
-  --chart-1: #FF4D50;
-  --chart-2: #5294FF;
-  --chart-3: #FACC00;
-  --chart-4: #05E17A;
-  --chart-5: #7A83FF;
-  --chart-active-dot: #000;
+
+  /* Purple-forward data colors */
+  --chart-1: #b000ff;
+  --chart-2: #7c3aed;
+  --chart-3: #d946ef;
+  --chart-4: #8b5cf6;
+  --chart-5: #c084fc;
+
+  --chart-active-dot: #ffffff;
 }
 
 .dark {
-  --background: oklch(24.95% 0.0491 20.19);
-  --secondary-background: oklch(23.93% 0 0);
-  --foreground: oklch(92.49% 0 0);
-  --main-foreground: oklch(0% 0 0);
-  --main: oklch(70.49% 0.1869 22.23);
-  --border: oklch(0% 0 0);
-  --ring: oklch(100% 0 0);
+  --background: oklch(5.5% 0.008 285);
+  --secondary-background: oklch(9% 0.012 285);
+
+  --foreground: oklch(96% 0.005 285);
+  --main-foreground: oklch(98% 0 0);
+
+  --main: oklch(65% 0.28 305);
+
+  --border: oklch(23% 0.035 295);
+
+  --ring: oklch(65% 0.28 305);
+
+  --overlay: oklch(0% 0 0 / 0.82);
+
   --shadow: 4px 4px 0px 0px var(--border);
-  --chart-1: #FF6669;
-  --chart-2: #5294FF;
-  --chart-3: #E0B700;
-  --chart-4: #04C86D;
-  --chart-5: #7A83FF;
-  --chart-active-dot: #fff;
+
+  --chart-1: #b000ff;
+  --chart-2: #7c3aed;
+  --chart-3: #d946ef;
+  --chart-4: #8b5cf6;
+  --chart-5: #c084fc;
+
+  --chart-active-dot: #ffffff;
 }
 
 @theme inline {
@@ -47,6 +73,7 @@
   --color-border: var(--border);
   --color-overlay: var(--overlay);
   --color-ring: var(--ring);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -57,8 +84,11 @@
   --spacing-boxShadowY: 4px;
   --spacing-reverseBoxShadowX: -4px;
   --spacing-reverseBoxShadowY: -4px;
+
   --radius-base: 5px;
+
   --shadow-shadow: var(--shadow);
+
   --font-weight-base: 500;
   --font-weight-heading: 700;
 }
@@ -76,9 +106,18 @@
   h6 {
     @apply font-heading;
   }
+
+  ::selection {
+    background: #b000ff;
+    color: #ffffff;
+  }
 }
 
-/* Full-page wave transition (black/white only, respects reduced motion) */
+
+/* ═══════════════════════════════════════════
+   ROUTE TRANSITION
+   ═══════════════════════════════════════════ */
+
 .route-wave {
   position: fixed;
   inset: 0;
@@ -90,25 +129,29 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: 130vh; /* extra height to keep the cap outside viewport initially */
+  height: 130vh;
   transform: translateY(100%);
-  animation: route-wave-sweep var(--route-wave-dur, 900ms) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation:
+    route-wave-sweep
+    var(--route-wave-dur, 900ms)
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
   will-change: transform;
 }
 
 .route-wave__layer--white {
-  background: #fff;
+  background: #050507;
   bottom: 0;
 }
 
 .route-wave__cap {
   position: absolute;
-  top: -12vh; /* position the cap above the layer to create a wave front */
+  top: -12vh;
   left: 0;
   right: 0;
   height: 24vh;
-  background: #fff;
-  /* rounded bottom edges create the "wave" front */
+  background: #050507;
+
   border-bottom-left-radius: 50% 100%;
   border-bottom-right-radius: 50% 100%;
 }
@@ -117,59 +160,86 @@
   0% {
     transform: translateY(100%);
   }
+
   50% {
     transform: translateY(0%);
   }
+
   100% {
     transform: translateY(-100%);
   }
 }
 
-/* Respect reduced motion: hide overlay animation */
-@media (prefers-reduced-motion: reduce) {
-  .route-wave {
-    display: none;
-  }
-}
+
+/* ═══════════════════════════════════════════
+   GLITCH
+   ═══════════════════════════════════════════ */
 
 .glitch {
   animation: glitch 1.5s linear infinite;
 }
 
 @keyframes glitch {
-  2%, 64% {
+  2%,
+  64% {
     transform: translate(2px, 0) skew(0deg);
   }
-  4%, 60% {
+
+  4%,
+  60% {
     transform: translate(-2px, 0) skew(0deg);
   }
+
   62% {
     transform: translate(0, 0) skew(5deg);
   }
 }
+
+
+/* ═══════════════════════════════════════════
+   FLICKER
+   ═══════════════════════════════════════════ */
 
 .flicker {
   animation: flicker 0.5s infinite alternate;
 }
 
 @keyframes flicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
 }
 
+
+/* ═══════════════════════════════════════════
+   SCANLINE
+   ═══════════════════════════════════════════ */
+
 .scanline {
   position: fixed;
   top: 0;
   left: 0;
+
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0));
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(176, 0, 255, 0),
+      rgba(176, 0, 255, 0.025) 50%,
+      rgba(176, 0, 255, 0)
+    );
+
   background-size: 100% 4px;
+
   animation: scanline 10s linear infinite;
+
   pointer-events: none;
 }
 
@@ -177,6 +247,7 @@
   from {
     background-position: 0 0;
   }
+
   to {
     background-position: 0 100%;
   }

@@ -233,7 +233,7 @@ export default function FormSubmissionPage() {
             value={value}
             onChange={(e) => handleFieldChange(field.id, e.target.value)}
             placeholder={field.placeholder}
-            className="bg-black text-white border-red-700/60 focus:border-red-500"
+            className="bg-black text-white border-purple-700/60 focus:border-purple-500"
             readOnly={isReadOnly}
           />
         )
@@ -245,7 +245,7 @@ export default function FormSubmissionPage() {
             value={value}
             onChange={(e) => handleFieldChange(field.id, e.target.value)}
             placeholder={field.placeholder}
-            className="bg-black text-white border-red-700/60 focus:border-red-500 min-h-[100px]"
+            className="bg-black text-white border-purple-700/60 focus:border-purple-500 min-h-[100px]"
             readOnly={isReadOnly}
           />
         )
@@ -256,7 +256,7 @@ export default function FormSubmissionPage() {
             key={field.id}
             value={value}
             onChange={(e) => handleFieldChange(field.id, e.target.value)}
-            className="w-full p-2 bg-black text-white border border-red-700/60 focus:border-red-500 rounded"
+            className="w-full p-2 bg-black text-white border border-purple-700/60 focus:border-purple-500 rounded"
             disabled={isReadOnly}
           >
             <option value="">Select an option</option>
@@ -276,7 +276,7 @@ export default function FormSubmissionPage() {
             value={value}
             onChange={(e) => handleFieldChange(field.id, e.target.value)}
             placeholder={field.placeholder}
-            className="bg-black text-white border-red-700/60 focus:border-red-500"
+            className="bg-black text-white border-purple-700/60 focus:border-purple-500"
             readOnly={isReadOnly}
           />
         )
@@ -307,8 +307,8 @@ export default function FormSubmissionPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage: `
-            repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px),
-            repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)
+            repeating-linear-gradient(0deg, transparent 0 23px, rgba(168,85,247,0.1) 24px),
+            repeating-linear-gradient(90deg, transparent 0 23px, rgba(168,85,247,0.1) 24px)
           `
         }}
       />
@@ -336,8 +336,8 @@ export default function FormSubmissionPage() {
         </Button>
 
         {/* Form Content */}
-        <ElectricBorder color="#ef4444">
-          <div className="bg-black border border-red-700/60 p-8 space-y-6">
+        <ElectricBorder color="#a855f7">
+          <div className="bg-black border border-purple-700/60 p-8 space-y-6">
             <div className="space-y-2">
               <div className="flex justify-center">
                 <FuzzyText fontSize="1.8rem" fontFamily="monospace" enableHover={false}>
@@ -353,7 +353,7 @@ export default function FormSubmissionPage() {
             <div className="flex items-center gap-2 text-sm">
               <span className={`px-3 py-1 rounded-full border ${
                 formData.is_locked 
-                  ? 'border-red-500 text-red-400 bg-red-500/10' 
+                  ? 'border-purple-500 text-purple-400 bg-purple-500/10' 
                   : 'border-green-500 text-green-400 bg-green-500/10'
               }`}>
                 {formData.is_locked ? 'LOCKED' : 'UNLOCKED'}
@@ -382,7 +382,7 @@ export default function FormSubmissionPage() {
                   <div key={field.id} className="space-y-2">
                     <Label className="text-white font-mono">
                       {field.label}
-                      {field.required && <span className="text-red-400 ml-1">*</span>}
+                      {field.required && <span className="text-purple-400 ml-1">*</span>}
                     </Label>
                     {renderField(field)}
                   </div>
@@ -399,7 +399,7 @@ export default function FormSubmissionPage() {
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-red-600 text-white hover:bg-red-700 font-mono text-lg py-3"
+                  className="w-full bg-purple-600 text-white hover:bg-purple-700 font-mono text-lg py-3"
                 >
                   {submitting
                     ? (existingSubmission ? "UPDATING..." : "SUBMITTING...")
@@ -419,8 +419,8 @@ export default function FormSubmissionPage() {
               )}
 
               {formData.is_locked && !isReadOnly && (
-                <div className="p-4 border border-red-700/60 bg-red-900/20 rounded text-center">
-                  <p className="text-red-400">This form is currently locked and cannot be submitted.</p>
+                <div className="p-4 border border-purple-700/60 bg-purple-900/20 rounded text-center">
+                  <p className="text-purple-400">This form is currently locked and cannot be submitted.</p>
                 </div>
               )}
             </form>

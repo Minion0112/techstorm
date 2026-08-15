@@ -34,8 +34,8 @@ export function GetStartedButton({ href, onClick, children = "Get Started", clas
 
       <style jsx>{`
         .hack-btn {
-          --red: #dc2626;
-          --deep-red: #7f1d1d;
+          --purple: #9333ea;
+          --deep-purple: #6b21a8;
           --bg: #0b0b0b;
           position: relative;
           display: inline-flex;
@@ -105,7 +105,7 @@ export function GetStartedButton({ href, onClick, children = "Get Started", clas
         .hack-btn:hover {
           transform: translateY(-2px);
           box-shadow: 0 12px 0 var(--deep-red), 0 0 28px rgba(220, 38, 38, 0.35);
-          border-color: #ef4444; /* a bit brighter on hover */
+          border-color: #a855f7; /* a bit brighter on hover */
         }
 
         .hack-btn:hover::before {

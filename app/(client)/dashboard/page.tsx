@@ -123,8 +123,8 @@ export default function DashboardPage() {
 
     // theme helpers
     const gridBackground =
-        "repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)," +
-        "repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)"
+        "repeating-linear-gradient(0deg, transparent 0 23px, rgba(168,85,247,0.1) 24px)," +
+        "repeating-linear-gradient(90deg, transparent 0 23px, rgba(168,85,247,0.1) 24px)"
 
 
     return (
@@ -135,8 +135,8 @@ export default function DashboardPage() {
                 className="pointer-events-none absolute inset-0"
                 style={{
                     backgroundImage: `
-                        repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px),
-                        repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)
+                        repeating-linear-gradient(0deg, transparent 0 23px, rgba(168,85,247,0.1) 24px),
+                        repeating-linear-gradient(90deg, transparent 0 23px, rgba(168,85,247,0.1) 24px)
                     `
                 }}
             />
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                     <div className="flex gap-4 flex-wrap">
                         <Button
                             onClick={() => router.push("/dashboard/team")}
-                            className="bg-red-600 text-white hover:bg-red-700 font-mono"
+                            className="bg-purple-600 text-white hover:bg-purple-700 font-mono"
                         >
                             VIEW TEAM DETAILS
                         </Button>
@@ -167,7 +167,7 @@ export default function DashboardPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {availableForms.map((form) => (
                                 <ElectricBorder key={form.id} color="#ef4444" className="h-fit">
-                                    <div className="bg-black border border-red-700/60 p-6 space-y-4">
+                                    <div className="bg-black border border-purple-700/60 p-6 space-y-4">
                                         <div className="space-y-2">
                                             <h3 className="text-lg font-bold text-white">{form.title}</h3>
                                             <p className="text-white/70 text-sm">{form.description}</p>
@@ -176,7 +176,7 @@ export default function DashboardPage() {
                                         <div className="flex items-center gap-2 text-xs">
                                             <span className={`px-2 py-1 rounded-full border ${
                                                 form.is_locked 
-                                                    ? 'border-red-500 text-red-400 bg-red-500/10' 
+                                                    ? 'border-purple-500 text-purple-400 bg-purple-500/10' 
                                                     : 'border-green-500 text-green-400 bg-green-500/10'
                                             }`}>
                                                 {form.is_locked ? 'LOCKED' : 'UNLOCKED'}
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                     <div className="space-y-8">
                         {team ? (
                             <div className="space-y-8">
-                                <div className="rounded-none border border-red-700/60 bg-black p-6  ">
+                                <div className="rounded-none border border-purple-700/60 bg-black p-6  ">
                                     <h3 className="text-xl mb-4 font-extrabold flex flex-col gap-2">
                                         <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>Team: {team.name}</FuzzyText>
                                     </h3>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                                         )}
                                     </div>
                                     {team.is_finalized && (
-                                        <div className="mt-4 pt-4 border-t border-red-700/30 space-y-2">
+                                        <div className="mt-4 pt-4 border-t border-purple-700/30 space-y-2">
                                             <p className="text-base font-bold text-white/90">
                                                 Mentor: <span className="font-normal text-white/70">{team.mentor_name || "Not Assigned"}</span>
                                             </p>
@@ -262,7 +262,7 @@ export default function DashboardPage() {
                                     )}
                                 </div>
 
-                                <div className="rounded-none border border-red-700/60 bg-black p-6  ">
+                                <div className="rounded-none border border-purple-700/60 bg-black p-6  ">
                                     <h3 className="text-xl mb-4 font-extrabold flex flex-col gap-2">
                                         <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>Team Members</FuzzyText>
                                     </h3>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
                                     )}
                                     {user && team && user.id === team.owner_id && !team.is_finalized && (
                                         <Button
-                                            className="w-full bg-red-600 text-white hover:bg-red-700"
+                                            className="w-full bg-purple-600 text-white hover:bg-purple-700"
                                             onClick={async () => {
                                                 const { error } = await supabase.rpc("finalize_team", { p_team_id: team.id })
                                                 if (error) {
@@ -337,7 +337,7 @@ export default function DashboardPage() {
                                     </div>
                                 </div>
 
-                                <div className="rounded-none border border-red-700/60 bg-black p-8  ">
+                                <div className="rounded-none border border-purple-700/60 bg-black p-8  ">
                                     {showCreate ? (
                                         <form onSubmit={onCreate} className="space-y-4 flex flex-col gap-4" >
                                                 <FuzzyText fontSize="1.5rem" fontFamily="monospace"  enableHover={false}>Create a new team</FuzzyText>
@@ -377,7 +377,7 @@ export default function DashboardPage() {
 
                                 {/* Guidelines: visible only when user has not joined any team */}
                                 <div className="items-start gap-4 hidden md:flex">
-                                    <div className="mt-1 h-6 w-6 shrink-0 rounded-sm bg-red-600 text-white grid place-items-center font-bold">
+                                    <div className="mt-1 h-6 w-6 shrink-0 rounded-sm bg-purple-600 text-white grid place-items-center font-bold">
                                         !
                                     </div>
                                     <div>

@@ -155,8 +155,8 @@ export default function OwnerDashboard() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage: `
-            repeating-linear-gradient(0deg, transparent 0 23px, rgba(239,68,68,0.1) 24px),
-            repeating-linear-gradient(90deg, transparent 0 23px, rgba(239,68,68,0.1) 24px)
+            repeating-linear-gradient(0deg, transparent 0 23px, rgba(168,85,247,0.1) 24px),
+            repeating-linear-gradient(90deg, transparent 0 23px, rgba(168,85,247,0.1) 24px)
           `
         }}
       />
@@ -175,8 +175,8 @@ export default function OwnerDashboard() {
               <span className="text-lg font-bold text-white">Submission Portal</span>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {availableForms.map((form) => (
-                <ElectricBorder key={form.id} color="#ef4444" className="h-fit">
-                  <div className="bg-black border border-red-700/60 p-6 space-y-4">
+                <ElectricBorder key={form.id} color="#a855f7" className="h-fit">
+                  <div className="bg-black border border-purple-700/60 p-6 space-y-4">
                     <div className="space-y-2">
                       <h3 className="text-lg font-bold text-white">{form.title}</h3>
                       <p className="text-white/70 text-sm">{form.description}</p>
@@ -185,7 +185,7 @@ export default function OwnerDashboard() {
                     <div className="flex items-center gap-2 text-xs">
                       <span className={`px-2 py-1 rounded-full border ${
                         form.is_locked 
-                          ? 'border-red-500 text-red-400 bg-red-500/10' 
+                          ? 'border-purple-500 text-purple-400 bg-purple-500/10' 
                           : 'border-green-500 text-green-400 bg-green-500/10'
                       }`}>
                         {form.is_locked ? 'LOCKED' : 'UNLOCKED'}
@@ -218,7 +218,7 @@ export default function OwnerDashboard() {
                           ? 'bg-blue-600 text-white hover:bg-blue-700' 
                           : form.is_locked 
                             ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
-                            : 'bg-red-600 text-white hover:bg-red-700'
+                            : 'bg-purple-600 text-white hover:bg-purple-700'
                       }`}
                     >
                       {form.has_submission
@@ -238,8 +238,8 @@ export default function OwnerDashboard() {
         {/* Owner Dashboard Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Team Management Card */}
-          <ElectricBorder color="#ef4444" className="h-fit">
-            <div className="bg-black border border-red-700/60 p-6 space-y-4">
+          <ElectricBorder color="#a855f7" className="h-fit">
+            <div className="bg-black border border-purple-700/60 p-6 space-y-4">
               <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>
                 Team Management
               </FuzzyText>
@@ -248,7 +248,7 @@ export default function OwnerDashboard() {
               </p>
               <Button
                 onClick={() => router.push("/dashboard/team")}
-                className="w-full bg-red-600 text-white hover:bg-red-700 font-mono"
+                className="w-full bg-purple-600 text-white hover:bg-purple-700 font-mono"
               >
                 MANAGE TEAM
               </Button>
@@ -256,8 +256,8 @@ export default function OwnerDashboard() {
           </ElectricBorder>
 
           {/* Statistics Card */}
-          <ElectricBorder color="#ef4444" className="h-fit">
-            <div className="bg-black border border-red-700/60 p-6 space-y-4">
+          <ElectricBorder color="#a855f7" className="h-fit">
+            <div className="bg-black border border-purple-700/60 p-6 space-y-4">
               <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>
                 Statistics
               </FuzzyText>
@@ -274,7 +274,7 @@ export default function OwnerDashboard() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white/70">Join Code:</span>
-                  <span className="text-red-400 font-mono">
+                  <span className="text-purple-400 font-mono">
                     {team?.is_finalized ? "LOCKED" : team?.join_code || "NONE"}
                   </span>
                 </div>
@@ -283,8 +283,8 @@ export default function OwnerDashboard() {
           </ElectricBorder>
 
           {/* Quick Actions Card */}
-          <ElectricBorder color="#ef4444" className="h-fit">
-            <div className="bg-black border border-red-700/60 p-6 space-y-4">
+          <ElectricBorder color="#a855f7" className="h-fit">
+            <div className="bg-black border border-purple-700/60 p-6 space-y-4">
               <FuzzyText fontSize="1.5rem" fontFamily="monospace" enableHover={false}>
                 Quick Actions
               </FuzzyText>
@@ -312,8 +312,8 @@ export default function OwnerDashboard() {
         </div>
 
         {/* Empty Dashboard Message */}
-        <ElectricBorder color="#ef4444">
-          <div className="bg-black border border-red-700/60 p-8 text-center space-y-4">
+          <ElectricBorder color="#a855f7">
+            <div className="bg-black border border-purple-700/60 p-8 text-center space-y-4">
               Submission Portal
             <p className="text-white/70 max-w-2xl mx-auto">
               This is your exclusive owner dashboard. From here, you can manage your team, 
@@ -321,7 +321,7 @@ export default function OwnerDashboard() {
               will be added as the system evolves.
             </p>
             <div className="pt-4">
-              <p className="text-red-400 text-sm font-mono">
+              <p className="text-purple-400 text-sm font-mono">
                 &gt; ACCESS LEVEL: ADMINISTRATOR
               </p>
             </div>

@@ -25,6 +25,7 @@ export function useSessionProxy() {
     try {
       const response = await fetch('/api/auth/session');
       const data = await response.json();
+      
       setSessionStatus(data);
 
       // Routing logic based on session status

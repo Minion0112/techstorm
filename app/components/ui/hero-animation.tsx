@@ -89,14 +89,18 @@ const Scene = () => {
         const dist = float(tiledUv.length());
         const dot = float(smoothstep(0.5, 0.49, dist)).mul(brightness);
 
-        const depth = tDepthMap;
+const depth = tDepthMap.r;
 
-        const flow = oneMinus(smoothstep(0, 0.02, abs(depth.sub(uProgress))));
+const flow = oneMinus(
+    smoothstep(0, 0.02, abs(depth.sub(uProgress)))
+);
 
-        const mask = dot.mul(flow).mul(vec3(10, 0, 0));
+const scanIntensity = dot.mul(flow);
 
-        const final = blendScreen(tMap, mask);
+const purple = vec3(0.70, 0.0, 0.85);
+const mask = purple.mul(scanIntensity).mul(0.8);
 
+const final = tMap.add(mask);
         const material = new THREE.MeshBasicNodeMaterial({
             colorNode: final,
         });

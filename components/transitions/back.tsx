@@ -81,7 +81,7 @@ const createTouchTexture = () => {
         ctx.shadowBlur = radius;
         ctx.shadowColor = `rgba(${color},${0.22 * intensity})`;
         ctx.beginPath();
-        ctx.fillStyle = "rgba(255,0,0,1)";
+        ctx.fillStyle = "rgba(168,85,247,1)";
         ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2);
         ctx.fill();
     };
