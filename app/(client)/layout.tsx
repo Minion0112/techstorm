@@ -56,11 +56,11 @@ export default function DashboardLayout({
 
     return (
         <>
-            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, opacity: 0.35, pointerEvents: 'none' }}>
                 <PixelBlast
                     variant="square"
                     pixelSize={5}
-                    color="#781C20"
+                      color="#a855f7"
                     patternScale={1.75}
                     patternDensity={1}
                     pixelSizeJitter={0}

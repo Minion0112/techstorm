@@ -20,7 +20,7 @@ export default function TeamDetailsPage() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  const blackAndWhiteBehindGradient = 'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(0,80%,70%,var(--card-opacity)) 4%,hsla(0,60%,50%,calc(var(--card-opacity)*0.75)) 10%,hsla(0,40%,30%,calc(var(--card-opacity)*0.5)) 50%,hsla(0,0%,0%,0) 100%)';
+  const blackAndWhiteBehindGradient = 'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(270,80%,70%,var(--card-opacity)) 4%,hsla(270,60%,50%,calc(var(--card-opacity)*0.75)) 10%,hsla(270,40%,30%,calc(var(--card-opacity)*0.5)) 50%,hsla(0,0%,0%,0) 100%)';
   const blackAndWhiteInnerGradient = '';
 
   useEffect(() => {

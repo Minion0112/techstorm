@@ -44,7 +44,7 @@ export default function ThemedHeader({
           <div className="flex flex-col gap-2">
               {title}
             {subtitle && (
-              <p className="text-red-400 text-lg font-mono tracking-wider">
+              <p className="text-purple-400 text-lg font-mono tracking-wider">
                 {subtitle}
               </p>
             )}

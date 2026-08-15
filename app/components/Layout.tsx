@@ -13,7 +13,7 @@ export default function Layout({ children }: LayoutProps) {
           direction="diagonal"
           speed={0.5}
           squareSize={40}
-          borderColor="rgba(233, 61, 84, 0.25)" // rose accent @ 25%
+          borderColor="rgba(168, 85, 247, 0.25)" // rose accent @ 25%
           hoverFillColor="#0a0a0a"
         />
       </div>
