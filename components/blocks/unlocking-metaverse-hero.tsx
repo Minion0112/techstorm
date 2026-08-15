@@ -51,10 +51,10 @@ export function UnlockingMetaverseHero({ className, learnMoreHref = "#", onLearn
               aria-hidden="true"
               className="absolute inset-0 translate-y-[0.12em] text-purple-600 blur-[0.5px] md:blur-[1px]"
             >
-              KICKSTART YOUR JOURNEY IN TECH WHERE ONE BATCH LEADS ANOTHER
+              Bringing The Solutions To Reality
             </span>
             <span className="relative block drop-shadow-[0_4px_0_rgba(0,0,0,0.35)]">
-              KICKSTART YOUR JOURNEY IN TECH WHERE ONE BATCH LEADS ANOTHER
+              Bringing The Solutions To Reality
             </span>
           </span>
         </h1>
