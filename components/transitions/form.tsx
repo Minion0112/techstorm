@@ -50,9 +50,9 @@ export default function Max() {
             next.email = "Enter a valid email address."
         }
 
-        // Registration Number
+        // Enrollment Number
         if (!registration.trim()) {
-            next.registration = "Registration number is required."
+            next.registration = "Enrollment number is required."
         }
 
         // Hosteler-specific checks
@@ -159,9 +159,9 @@ export default function Max() {
                     )}
                 </div>
 
-                {/* Registration Number */}
+                {/* Enrollment Number */}
                 <div className="space-y-2">
-                    <Label htmlFor="registration">Registration Number</Label>
+                    <Label htmlFor="registration">Enrollment Number</Label>
                     <Input
                         id="registration"
                         placeholder="e.g., 23CSE1234"

@@ -97,7 +97,7 @@ export default function NewForm() {
         }
 
         if (!registration.trim()) {
-            next.registration = 'Registration number is required.'
+            next.registration = 'Enrollment number is required.'
         }
 
         if (isHosteler) {
@@ -303,9 +303,9 @@ export default function NewForm() {
                     )}
                 </div>
 
-                {/* Registration Number */}
+                {/* Enrollment Number */}
                 <div className="space-y-2">
-                    <Label htmlFor="registration">Registration Number</Label>
+                    <Label htmlFor="registration">Enrollment Number</Label>
                     <Input
                         id="registration"
                         placeholder="e.g., 23CSE1234"
