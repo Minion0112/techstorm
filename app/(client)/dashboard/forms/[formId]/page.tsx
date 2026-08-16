@@ -19,6 +19,9 @@ interface FormField {
   required: boolean
   placeholder?: string
   options?: string[]
+  helperText?: string
+  link?: string
+  linkText?: string
 }
 
 interface FormData {
@@ -380,10 +383,27 @@ export default function FormSubmissionPage() {
               {formData.fields && formData.fields.length > 0 ? (
                 formData.fields.map((field) => (
                   <div key={field.id} className="space-y-2">
-                    <Label className="text-white font-mono">
-                      {field.label}
-                      {field.required && <span className="text-purple-400 ml-1">*</span>}
-                    </Label>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <Label className="text-white font-mono">
+                        {field.label}
+                        {field.required && <span className="text-purple-400 ml-1">*</span>}
+                      </Label>
+                      {field.link && (
+                        <a
+                          href={field.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-mono text-purple-400 hover:text-purple-300 underline underline-offset-4 flex items-center gap-1"
+                        >
+                          {field.linkText || "Open Drive Link ↗"}
+                        </a>
+                      )}
+                    </div>
+                    {field.helperText && (
+                      <p className="text-xs text-white/60 font-mono">
+                        {field.helperText}
+                      </p>
+                    )}
                     {renderField(field)}
                   </div>
                 ))
