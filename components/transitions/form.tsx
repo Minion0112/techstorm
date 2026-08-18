@@ -164,7 +164,7 @@ export default function Max() {
                     <Label htmlFor="registration">Enrollment Number</Label>
                     <Input
                         id="registration"
-                        placeholder="e.g., 23CSE1234"
+                        placeholder="e.g., 260ABC"
                         value={registration}
                         onChange={(e) => setRegistration(e.target.value)}
                         aria-invalid={!!errors.registration}
