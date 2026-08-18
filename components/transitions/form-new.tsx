@@ -138,7 +138,7 @@ export default function NewForm() {
             let student_undertaking_url = studentUndertakingUrl;
             if (studentUndertakingFile) {
                 const { data, error } = await supabase.storage
-                    .from('undertakings')
+                    .from('undertakings2')
                     .upload(`${user.id}/student_${studentUndertakingFile.name}`,
                     studentUndertakingFile,
                     {
@@ -157,7 +157,7 @@ export default function NewForm() {
             let parent_undertaking_url = parentUndertakingUrl;
             if (parentUndertakingFile) {
                 const { data, error } = await supabase.storage
-                    .from('undertakings')
+                    .from('undertakings2')
                     .upload(`${user.id}/parent_${parentUndertakingFile.name}`,
                     parentUndertakingFile,
                     {
