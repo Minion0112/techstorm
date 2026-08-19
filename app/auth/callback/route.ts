@@ -33,8 +33,6 @@ export async function GET(request: Request) {
 
       // Registration is closed AND this is a new user
       if (!registrationOpen && !profile) {
-        // Remove the newly-created OAuth session
-        await supabase.auth.signOut()
 
         return NextResponse.redirect(`${siteUrl}/registration-closed`)
       }
